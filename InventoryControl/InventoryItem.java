@@ -1,4 +1,4 @@
-package Inventory;
+package InventoryControl;
 
 public class InventoryItem {
 
