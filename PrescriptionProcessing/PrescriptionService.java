@@ -1,0 +1,101 @@
+package PrescriptionProcessing;
+
+import java.util.List;
+
+public class PrescriptionService {
+
+    // add new prescription order (8.3.1)
+    public void addNewPresctiption(Prescription prescription) {
+
+    }
+
+
+    // get electronic prescription (8.3.2)
+    public boolean importElectronicPrescription(ElectronicPrescription ePrescription) {
+        if (checkPrescriptionFields(ePrescription)) {
+            addNewPresctiption(new Prescription(
+                    ePrescription.getPrescriptionId(),
+                    ePrescription.getMedicationId(),
+                    ePrescription.getPatientId(),
+                    ePrescription.getDosage(),
+                    "Pending",
+                    ePrescription.getNotes()));
+
+            return true;
+        }
+        return false;
+    }
+
+
+
+    // check that all fields are filled (8.3.3)
+    public boolean checkPrescriptionFields(Prescription prescription) {
+
+        if (prescription.getPrescriptionId() == 0 ||
+                prescription.getPatientId() == 0 ||
+                prescription.getDosage() == null ||
+                prescription.getNotes() == null) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+    // checks for medication interactions (8.3.5)
+    public boolean checkMedicationInteractions(int medicationId, List<String> currentMedications) {
+        return true;
+
+        //need to create a file that has known medication interactions and method to fetch that list
+    }
+
+
+    // check allergies of patient (8.3.6)
+    public boolean checkAllergies(Patient patient, int medicationId) {
+        return true;
+
+        //need to create list of known allergic reactions with medications and a method to get that list
+    }
+
+
+    // track current status of prescription (8.3.8)
+    public String trackStatus(int prescriptionId) {
+
+    }
+
+
+    // check that there is enough inventory (8.3.9)
+    public boolean checkInventory(int medicationId, int quantity) {
+
+    }
+
+
+    // check expiration date (8.3.9)
+    public boolean checkExpiration(int medicationId) {
+
+    }
+
+
+    // collect all prescription history of a patient (8.3.10)
+    public void getPrescriptionHistory(int patientId) {
+
+    }
+
+
+    // notify patients (8.3.11)
+    public void sendNotification(int patientId, int prescriptionId) {
+
+    }
+
+
+    // ensure no duplicate prescription (8.3.13)
+    public boolean checkDuplicate(int patientId, int prescriptionId, int medicationId) {
+
+    }
+
+    // record pickup confirmation
+    public boolean confirmPickup(int prescriptionId) {
+
+    }
+
+}
