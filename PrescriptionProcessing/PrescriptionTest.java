@@ -2,7 +2,6 @@ package PrescriptionProcessing;
 
 // Importing required classes
 import Patient.Patient;
-import PrescriptionProcessing.ElectronicPrescription;
 import PrescriptionProcessing.Prescription;
 import PrescriptionProcessing.PrescriptionService;
 
@@ -21,10 +20,6 @@ public class PrescriptionTest {
         Prescription prescription = new Prescription(1, 1, 1, "10mg", "Pending", "Take with food");
         // Adding a new prescription
         prescriptionService.addNewPresctiption(prescription);
-        // Creating an object of ElectronicPrescription
-        ElectronicPrescription ePrescription = new ElectronicPrescription(2, 2, 2, "20mg", "Take before bed");
-        // Importing electronic prescription
-        prescriptionService.importElectronicPrescription(ePrescription);
         // Creating a list of current medications
         List<String> currentMedications = new ArrayList<>();
         currentMedications.add("Medication A");

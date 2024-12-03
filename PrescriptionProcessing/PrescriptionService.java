@@ -3,12 +3,73 @@ package PrescriptionProcessing;
 import java.util.List;
 import java.util.ArrayList;
 import PrescriptionProcessing.Prescription;
-import PrescriptionProcessing.ElectronicPrescription;
 import Patient.Patient;
+
+import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class PrescriptionService {
 
     private List<Prescription> prescriptionList = new ArrayList<>();
+    private File medicineListFile = new File("medicineList.csv");
+
+    public int readMedicineInteractionFile(File medicineListFile, List<String> currentMedications, int medicationId) {
+        // Read csv file. Columns are Med1, Med1ID, Med2, Med2ID, Interaction
+        // Return number of interactions found
+        int interactionCount = 0;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(medicineListFile))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+                if (values.length == 6) {
+                    String med1 = values[0];
+                    int med1Id = Integer.parseInt(values[1]);
+                    String med2 = values[4];
+                    int med2Id = Integer.parseInt(values[5]);
+
+                    if (med1Id == medicationId || med2Id == medicationId) {
+                        if (currentMedications.contains(med1) || currentMedications.contains(med2)) {
+                            interactionCount++;
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return interactionCount;
+    }
+
+    public int readAllergyInteractionFile(File medicineListFile, List<String> allergies, int medicationId) {
+        // Read csv file. Columns are Allergy, AllergyID, Medication, MedicationID
+        // Return number of interactions found
+        int interactionCount = 0;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(medicineListFile))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+                if (values.length == 4) {
+                    String allergy = values[2];
+                    int allergyId = Integer.parseInt(values[3]);
+
+                    if (allergyId == medicationId) {
+                        if (allergies.contains(allergy)) {
+                            interactionCount++;
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return interactionCount;
+    }
 
     // add new prescription order (8.3.1)
     public boolean addNewPresctiption(Prescription prescription) {
@@ -31,15 +92,15 @@ public class PrescriptionService {
     }
 
     // get electronic prescription (8.3.2)
-    public boolean importElectronicPrescription(ElectronicPrescription ePrescription) {
-        if (checkPrescriptionFields(ePrescription)) {
+    public boolean readNewPrescription(Prescription prescription) {
+        if (checkPrescriptionFields(prescription)) {
             addNewPresctiption(new Prescription(
-                    ePrescription.getPrescriptionId(),
-                    ePrescription.getMedicationId(),
-                    ePrescription.getPatientId(),
-                    ePrescription.getDosage(),
+                    prescription.getPrescriptionId(),
+                    prescription.getMedicationId(),
+                    prescription.getPatientId(),
+                    prescription.getDosage(),
                     "Pending",
-                    ePrescription.getNotes()));
+                    prescription.getNotes()));
 
             return true;
         }
@@ -48,7 +109,6 @@ public class PrescriptionService {
 
     // check that all fields are filled (8.3.3)
     public boolean checkPrescriptionFields(Prescription prescription) {
-
         return prescription.getPrescriptionId() != 0
                 && prescription.getPatientId() != 0
                 && prescription.getDosage() != null
@@ -57,21 +117,44 @@ public class PrescriptionService {
 
     // checks for medication interactions (8.3.5)
     public boolean checkMedicationInteractions(int medicationId, List<String> currentMedications) {
-        return true;
+        // Reads the medication interaction file and checks for interactions
+        int interactionCount = readMedicineInteractionFile(medicineListFile, currentMedications, medicationId);
 
-        //need to create a file that has known medication interactions and method to fetch that list
+        // If the count is greater than 0, interactions are found
+        if (interactionCount > 0) {
+            System.out.println("Interaction found: " + interactionCount);
+            return true;
+        } else {
+            System.out.println("No interactions found.");
+            return false;
+        }
     }
 
     // check allergies of patient (8.3.6)
-    public boolean checkAllergies(Patient patient, int medicationId) {
-        return true;
+    public boolean checkAllergies(List<String> allergies, int medicationId, File allergiesFile) {
+        // Read allergies file and compare both patient allergies and medication allergies
+        int allgeryCount = readAllergyInteractionFile(medicineListFile, allergies, medicationId);
 
-        //need to create list of known allergic reactions with medications and a method to get that list
+        // If the count is greater than 0, interactions are found
+        if (allgeryCount > 0) {
+            System.out.println("Interaction found: " + allgeryCount);
+            return true;
+        } else {
+            System.out.println("No interactions found.");
+            return false;
+        }
     }
 
     // track current status of prescription (8.3.8)
     public String trackStatus(int prescriptionId, String status) {
-        //TODO: create 
+        for (Prescription currentPrescription : prescriptionList) {
+            if (currentPrescription.getPrescriptionId() == prescriptionId) {
+                currentPrescription.setStatus(status);
+                return status;
+            }
+        }
+
+        return null;
     }
 
     // check that there is enough inventory (8.3.9)
