@@ -1,43 +1,62 @@
-package InventoryControl;
+package Inventory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryService {
     private List<InventoryItem> inventory = new ArrayList<>();
-    private int nextId = 1; // ID generator for new items
+    private int nextId = 1;
 
-    // Add a new item to inventory
-    public void addItem(String name, int quantity, double price) {
-        InventoryItem item = new InventoryItem(nextId++, name, quantity, price);
+    // addItem method that uses CSV provided ID
+    public void addItem(int id, String name, int quantity, double price, int amountSold, 
+                       String expDate, boolean conSubstancePackage, String supplier, List<String> allergen) {
+        InventoryItem item = new InventoryItem(id, name, quantity, price, amountSold, 
+                                             expDate, conSubstancePackage, supplier, allergen);
+        inventory.add(item);
+        // Update nextId if the current id is larger
+        if (id >= nextId) {
+            nextId = id + 1;
+        }
+    }
+
+    // Another method for adding items without providing an ID (will use nextId)
+    public void addNewItem(String name, int quantity, double price, int amountSold, 
+                          String expDate, boolean conSubstancePackage, String supplier, List<String> allergen) {
+        InventoryItem item = new InventoryItem(nextId++, name, quantity, price, amountSold, 
+                                             expDate, conSubstancePackage, supplier, allergen);
         inventory.add(item);
     }
 
     // Retrieve all inventory items
     public List<InventoryItem> getAllItems() {
-        return new ArrayList<>(inventory); // Return a copy of the list to protect original data
+        return new ArrayList<>(inventory);
     }
 
     // Update an existing item by ID
-    public boolean updateItem(int id, int quantity, double price) {
+    public boolean updateItem(int id, int quantity, double price, int amountSold, 
+                            String expDate, boolean conSubstancePackage, String supplier, List<String> allergen) {
         for (InventoryItem item : inventory) {
             if (item.getId() == id) {
                 item.setQuantity(quantity);
                 item.setPrice(price);
-                return true; // Item found and updated
+                item.setAmountSold(amountSold);
+                item.setExpDate(expDate);
+                item.setConSubstancePackage(conSubstancePackage);
+                item.setSupplier(supplier);
+                item.setAllergen(allergen);
+                return true;
             }
         }
-        return false; // Item not found
+        return false;
     }
 
     // Delete an item from inventory by ID
     public boolean deleteItem(int id) {
-        for (int i = 0; i < inventory.size(); i++) {
-            if (inventory.get(i).getId() == id) {
-                inventory.remove(i);
-                return true; // Item found and deleted
-            }
-        }
-        return false; // Item not found
+        return inventory.removeIf(item -> item.getId() == id);
+    }
+
+    // Get current nextId value (useful for testing)
+    public int getNextId() {
+        return nextId;
     }
 }
