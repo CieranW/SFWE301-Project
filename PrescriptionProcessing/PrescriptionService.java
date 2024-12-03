@@ -83,7 +83,6 @@ public class PrescriptionService {
 
     // check that all fields are filled (8.3.3)
     public boolean checkPrescriptionFields(Prescription prescription) {
-
         return prescription.getPrescriptionId() != 0
                 && prescription.getPatientId() != 0
                 && prescription.getDosage() != null
@@ -92,7 +91,10 @@ public class PrescriptionService {
 
     // checks for medication interactions (8.3.5)
     public boolean checkMedicationInteractions(int medicationId, List<String> currentMedications) {
+        // Reads the medication interaction file and checks for interactions
         int interactionCount = readMedicineInteractionFile(medicationInteractionFile, currentMedications, medicationId);
+
+        // If the count is greater than 0, interactions are found
         if (interactionCount > 0) {
             System.out.println("Interaction found: " + interactionCount);
             return true;
