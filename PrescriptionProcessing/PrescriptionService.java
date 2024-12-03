@@ -99,10 +99,13 @@ public class PrescriptionService {
         if (checkPrescriptionFields(prescription)) {
             addNewPresctiption(new Prescription(
                     prescription.getPrescriptionId(),
+                    prescription.getMedicationName(),
                     prescription.getMedicationId(),
+                    prescription.getPatientName(),
                     prescription.getPatientId(),
                     prescription.getDosage(),
-                    "Pending",
+                    prescription.getNumDays(),
+                    "Pending Approval",
                     prescription.getNotes()));
 
             return true;
@@ -189,7 +192,7 @@ public class PrescriptionService {
     }
 
     // check expiration date (8.3.9)
-    public boolean checkExpiration(int medicationId, File medicineListFile) {
+    public boolean checkExpiration(int medicationId, File medicineListFile, int patientId, Prescription prescription) {
         // Compares current date with expiration date
         // Could also calculate the number of days left until expiration or use the number of days needed to take the medication as a reference
         // Returns true if the medication is not expired, false otherwise
@@ -201,7 +204,7 @@ public class PrescriptionService {
                     int medId = Integer.parseInt(values[1]);
                     String expirationDate = values[10];
 
-                    if (medId == medicationId) {
+                    if (medId == medicationId && patientId == prescription.getPatientId()) {
                         // Compare expiration date with current date
                         // If expiration date is greater than current date, return true
                         // Otherwise, return false
