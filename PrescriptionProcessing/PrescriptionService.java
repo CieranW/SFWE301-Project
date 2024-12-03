@@ -158,8 +158,30 @@ public class PrescriptionService {
     }
 
     // check that there is enough inventory (8.3.9)
-    public boolean checkInventory(int medicationId, int quantity) {
+    public boolean checkInventory(File medicineListFile, int medicationId) {
+        // Compares current inventory with minimum required quantity
+        // Returns true if there is enough inventory, false otherwise
+        try (BufferedReader br = new BufferedReader(new FileReader(medicineListFile))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+                if (values.length == 14) {
+                    int medId = Integer.parseInt(values[1]);
+                    int currentQuantity = Integer.parseInt(values[6]);
+                    int minQuantity = Integer.parseInt(values[9]);
 
+                    // Prescribed = 10, Current = 20, Min = 5
+                    // 20 >= 10 && 20 - 10 >= 5
+                    if (medId == medicationId) {
+                        if (currentQuantity >= minQuantity) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // check expiration date (8.3.9)
@@ -180,14 +202,13 @@ public class PrescriptionService {
     // ensure no duplicate prescription (8.3.13)
     public boolean checkDuplicate(int patientId, int prescriptionId, int medicationId) {
         for (Prescription currentPrescription : prescriptionList) {
-            if (existingPrescription.getPatientId() == patientId
-                    && existingPrescription.getPrescriptionId() == prescriptionId
-                    && existingPrescription.getMedicationId() == medicationId) {
-                return true; // duplicate is found
+            if (currentPrescription.getPatientId() == patientId
+                    && currentPrescription.getPrescriptionId() == prescriptionId
+                    && currentPrescription.getMedicationId() == medicationId) {
+                return true;
             }
         }
-
-        return false; // no duplicate found
+        return false;
     }
 
     // record pickup confirmation
