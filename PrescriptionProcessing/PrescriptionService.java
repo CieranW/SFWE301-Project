@@ -106,7 +106,8 @@ public class PrescriptionService {
                     prescription.getDosage(),
                     prescription.getNumDays(),
                     "Pending Approval",
-                    prescription.getNotes()));
+                    prescription.getNotes(),
+                    prescription.getRetrievalMethod()));
 
             return true;
         }
