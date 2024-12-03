@@ -13,7 +13,7 @@ import java.io.IOException;
 public class PrescriptionService {
 
     private List<Prescription> prescriptionList = new ArrayList<>();
-    private File medicineListFile = new File("medicineList.csv");
+    private File medicineListFile = new File("Medicine_list.csv");
 
     public int readMedicineInteractionFile(File medicineListFile, List<String> currentMedications, int medicationId) {
         // Read csv file. Columns are Med1, Med1ID, Med2, Med2ID, Interaction
@@ -24,7 +24,7 @@ public class PrescriptionService {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                if (values.length == 6) {
+                if (values.length == 14) {
                     String med1 = values[0];
                     int med1Id = Integer.parseInt(values[1]);
                     String med2 = values[4];
@@ -53,7 +53,7 @@ public class PrescriptionService {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                if (values.length == 4) {
+                if (values.length == 14) {
                     String allergy = values[2];
                     int allergyId = Integer.parseInt(values[3]);
 
