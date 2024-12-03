@@ -29,12 +29,11 @@ public class PrescriptionManager {
                 int numberOfDays = Integer.parseInt(fields[6].trim());
                 String notes = fields[7].trim();
                 String status = fields[8].trim();
-                String retrievalMethod = fields[9].trim();
 
                 // Create a Prescription object
                 Prescription prescription = new Prescription(prescriptionID, patientName, patientID,
                 medicationName, medicationID, dosage,
-                numberOfDays, notes, status, retrievalMethod);
+                numberOfDays, notes, status);
 
                 // Add to the map
                 prescriptionMap.put(prescriptionID, prescription);

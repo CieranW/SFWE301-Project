@@ -1,0 +1,26 @@
+medicine name,medicineId,associated allergies to medicine,associated allergies ID,medicines that it has bad interactions with,interaction medications to avoid ID
+Aspirin,1,lactose;gluten,1;2,Lisinopril; Warfarin,2;23
+Lisinopril,2,soy;wheat,3;4,Aspirin; Warfarin,1;23
+Amoxicillin,3,penicillin;sulfa,5;6,Lisinopril; Oxycodone,2;5
+Metformin,4,lactose,1,Aspirin; Ibuprofen,1;26
+Oxycodone,5,none,0,Metformin; Amoxicillin,4;3
+Sertraline,6,gelatin;soy,7;3,Aspirin; Oxycodone,1;5
+Alprazolam,7,lactose;corn,1;8,Ibuprofen; Warfarin,26;23
+Hydrochlorothiazide,8,sulfa,6,Morphine; Ibuprofen,27;26
+Gabapentin,9,starch,9,Oxycodone; Lisinopril,5;23
+Metoprolol,10,lactose;soy,1;3,Aspirin; Prednisone,1;11
+Prednisone,11,gluten,2,Lisinopril; Ibuprofen,2;26
+Amlodipine,12,none,10,Morphine; Prednisone,17;11
+Methylphenidate,13,corn;soy,8;3,Sertraline; Oxycodone,8; 7
+Fluoxetine,14,gelatin,7,Aspirin; Metformin,1;4
+Omeprazole,15,lactose,1,Prednisone; Aspirin,11;1
+Levothyroxine,16,lactose;gluten,1;2,Oxycodone; Prednisone,5;11
+Morphine,17,none,11,Ibuprofen; Lisinopril,26;2
+Escitalopram,18,soy,3,Warfarin; Ibuprofen,23;26
+Pantoprazole,19,none,12,Ibuprofen; Lisinopril,26;2
+Tramadol,20,lactose;starch,1;9,Morphine; Ibuprofen,10;26
+Cetirizine,21,none,13,Prednisone; Lisinopril,11;2
+Duloxetine,22,gelatin;soy,7;3,Metformin; Lisinopril,4;2
+Warfarin,23,lactose,1,Prednisone; Aspirin,11; 1
+Venlafaxine,24,corn,8,Ibuprofen; Lisinopril,26; 2
+Fentanyl,25,none,14,Amoxicillin; Warfarin,3; 23

@@ -109,8 +109,7 @@ public class PrescriptionService {
                     prescription.getDosage(),
                     prescription.getNumDays(),
                     "Pending Approval",
-                    prescription.getNotes(),
-                    prescription.getRetrievalMethod()));
+                    prescription.getNotes()));
 
             return true;
         }
@@ -241,11 +240,6 @@ public class PrescriptionService {
         
     }
 
-    // Notify patients (8.3.11)
-    public void sendNotification(int patientId, int prescriptionId) {
-
-    }
-
     // Check for controlled substances (8.3.12)
     public boolean checkControlledSubstance(int medicationId, File medicineListFile) {
         // Read the medicine list file and check if the medication is a controlled substance
@@ -289,11 +283,6 @@ public class PrescriptionService {
             }
         }
         return false;
-    }
-
-    // Record pickup confirmation (8.3.15)
-    public boolean confirmPickup(int prescriptionId) {
-        
     }
 
 }
