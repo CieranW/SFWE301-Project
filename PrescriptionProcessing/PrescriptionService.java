@@ -13,10 +13,10 @@ import java.util.List;
 public class PrescriptionService {
 
     private List<Prescription> prescriptionList = new ArrayList<>();
-    private File medicineListFile = new File("Medicine_list.csv");
+    private File medicineListFile = new File("Medicine_List_v2.csv");
 
     public int readMedicineInteractionFile(File medicineListFile, List<String> currentMedications, int medicationId) {
-        // Read csv file. Columns are Med1, Med1ID, Med2, Med2ID, Interaction
+        // Read csv file
         // Return number of interactions found
         int interactionCount = 0;
 
@@ -24,7 +24,7 @@ public class PrescriptionService {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                if (values.length == 14) {
+                if (values.length == 6) {
                     String med1 = values[0];
                     int med1Id = Integer.parseInt(values[1]);
                     String med2 = values[4];
@@ -53,7 +53,7 @@ public class PrescriptionService {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                if (values.length == 14) {
+                if (values.length == 6) {
                     String allergy = values[2];
                     int allergyId = Integer.parseInt(values[3]);
 
