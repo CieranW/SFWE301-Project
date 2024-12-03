@@ -1,11 +1,29 @@
 package PrescriptionProcessing;
 
 import java.util.List;
+import java.util.ArrayList;
 
 public class PrescriptionService {
 
+    private List<Prescription> prescriptionList = new ArrayList<>();
+
     // add new prescription order (8.3.1)
-    public void addNewPresctiption(Prescription prescription) {
+    public boolean addNewPresctiption(Prescription prescription) {
+        //validate prescription fields
+        if (!checkPrescriptionFields(prescription)) {
+            System.out.println("Error: Prescription fields are invalid.");
+            return false;
+        }
+
+        if (checkDuplicate(prescription.getPatientId(), prescription.getPrescriptionId(), prescription.getMedicationId())) {
+            System.out.println("Error: Duplicate prescription.");
+            return false;
+        }
+
+        // add to list
+        prescriptionList.add(prescription);
+        System.out.println("Prescription added successfully: " + prescription);
+        return true;
 
     }
 
@@ -59,8 +77,8 @@ public class PrescriptionService {
 
 
     // track current status of prescription (8.3.8)
-    public String trackStatus(int prescriptionId) {
-
+    public String trackStatus(int prescriptionId, String status) {
+        //TODO: create 
     }
 
 
@@ -90,7 +108,15 @@ public class PrescriptionService {
 
     // ensure no duplicate prescription (8.3.13)
     public boolean checkDuplicate(int patientId, int prescriptionId, int medicationId) {
+        for (Prescription currentPrescription : prescriptionList) {
+            if (existingPrescription.getPatientId() == patientId &&
+                    existingPrescription.getPrescriptionId() == prescriptionId &&
+                    existingPrescription.getMedicationId() == medicationId) {
+                return true; // duplicate is found
+            }
+        }
 
+        return false; // no duplicate found
     }
 
     // record pickup confirmation
