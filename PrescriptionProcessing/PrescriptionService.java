@@ -5,9 +5,45 @@ import java.util.ArrayList;
 import PrescriptionProcessing.Prescription;
 import Patient.Patient;
 
+import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
 public class PrescriptionService {
 
     private List<Prescription> prescriptionList = new ArrayList<>();
+    private File medicationInteractionFile;
+
+    public int readMedicineInteractionFile(File medicationInteractionFile, List<String> currentMedications, int medicationId) {
+        // Read csv file. Columns are Med1, Med1ID, Med2, Med2ID, Interaction
+        // Return number of interactions found
+        int interactionCount = 0;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(medicationInteractionFile))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+                if (values.length == 5) {
+                    String med1 = values[0];
+                    int med1Id = Integer.parseInt(values[1]);
+                    String med2 = values[2];
+                    int med2Id = Integer.parseInt(values[3]);
+                    String interaction = values[4];
+
+                    if (med1Id == medicationId || med2Id == medicationId) {
+                        if (currentMedications.contains(med1) || currentMedications.contains(med2)) {
+                            interactionCount++;
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return interactionCount;
+    }
 
     // add new prescription order (8.3.1)
     public boolean addNewPresctiption(Prescription prescription) {
@@ -56,9 +92,14 @@ public class PrescriptionService {
 
     // checks for medication interactions (8.3.5)
     public boolean checkMedicationInteractions(int medicationId, List<String> currentMedications) {
-        return true;
-
-        //need to create a file that has known medication interactions and method to fetch that list
+        int interactionCount = readMedicineInteractionFile(medicationInteractionFile, currentMedications, medicationId);
+        if (interactionCount > 0) {
+            System.out.println("Interaction found: " + interactionCount);
+            return true;
+        } else {
+            System.out.println("No interactions found.");
+            return false;
+        }
     }
 
     // check allergies of patient (8.3.6)

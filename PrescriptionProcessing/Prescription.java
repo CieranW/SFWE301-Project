@@ -1,13 +1,13 @@
 package PrescriptionProcessing;
 
 public class Prescription {
+
     private int prescriptionId;
     private int medicationId;
     private int patientId;
     private String dosage;
     private String status;
     private String notes;
-
 
     public Prescription(int prescriptionId, int medicationId, int patientId, String dosage, String status, String notes) {
         this.prescriptionId = prescriptionId;
@@ -65,7 +65,5 @@ public class Prescription {
     public void setNotes(String notes) {
         this.notes = notes;
     }
-
-
 
 }
