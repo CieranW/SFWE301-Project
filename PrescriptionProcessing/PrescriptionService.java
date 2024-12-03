@@ -9,6 +9,9 @@ import java.io.File;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 public class PrescriptionService {
 
@@ -38,7 +41,7 @@ public class PrescriptionService {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error reading file: " + e.getMessage());
         }
 
         return interactionCount;
@@ -65,7 +68,7 @@ public class PrescriptionService {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error reading file: " + e.getMessage());
         }
 
         return interactionCount;
@@ -180,13 +183,50 @@ public class PrescriptionService {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error reading file: " + e.getMessage());
         }
+        return false;
     }
 
     // check expiration date (8.3.9)
-    public boolean checkExpiration(int medicationId) {
+    public boolean checkExpiration(int medicationId, File medicineListFile) {
+        // Compares current date with expiration date
+        // Could also calculate the number of days left until expiration or use the number of days needed to take the medication as a reference
+        // Returns true if the medication is not expired, false otherwise
+        try (BufferedReader br = new BufferedReader(new FileReader(medicineListFile))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+                if (values.length == 14) {
+                    int medId = Integer.parseInt(values[1]);
+                    String expirationDate = values[10];
 
+                    if (medId == medicationId) {
+                        // Compare expiration date with current date
+                        // If expiration date is greater than current date, return true
+                        // Otherwise, return false
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                        LocalDate currentDate = LocalDate.now();
+                        LocalDate expDate = LocalDate.parse(expirationDate, formatter);
+
+                        // Assuming the number of days the medicine needs to be taken for is provided
+                        int daysToTakeMedicine = 30; // Example value
+
+                        if (expDate.isAfter(currentDate)) {
+                            long daysUntilExpiration = ChronoUnit.DAYS.between(currentDate, expDate);
+                            if (daysUntilExpiration >= daysToTakeMedicine) {
+                                return true;
+                            }
+                        }
+                        return false;
+                        
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading file: " + e.getMessage());
+        }
+        return false;
     }
 
     // collect all prescription history of a patient (8.3.10)
