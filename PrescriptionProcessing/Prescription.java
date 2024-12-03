@@ -32,8 +32,8 @@ public class Prescription {
         this.prescriptionId = prescriptionId;
     }
 
-    public int getMedicationName() {
-        return medicationId;
+    public String getMedicationName() {
+        return medicationName;
     }
 
     public void setMedicationName(String medicationName) {
@@ -48,8 +48,8 @@ public class Prescription {
         this.medicationId = medicationId;
     }
 
-    public int getPatientName() {
-        return patientId;
+    public String getPatientName() {
+        return patientName;
     }
 
     public void setPatientName(String patientName) {
@@ -72,8 +72,8 @@ public class Prescription {
         this.dosage = dosage;
     }
 
-    public String getNumDays() {
-        return dosage;
+    public int getNumDays() {
+        return numDays;
     }
 
     public void setNumDays(int numDays) {
