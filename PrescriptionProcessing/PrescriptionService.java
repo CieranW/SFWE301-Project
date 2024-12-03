@@ -3,7 +3,6 @@ package PrescriptionProcessing;
 import java.util.List;
 import java.util.ArrayList;
 import PrescriptionProcessing.Prescription;
-import PrescriptionProcessing.ElectronicPrescription;
 import Patient.Patient;
 
 public class PrescriptionService {
@@ -31,15 +30,15 @@ public class PrescriptionService {
     }
 
     // get electronic prescription (8.3.2)
-    public boolean importElectronicPrescription(ElectronicPrescription ePrescription) {
-        if (checkPrescriptionFields(ePrescription)) {
+    public boolean readNewPrescription(Prescription prescription) {
+        if (checkPrescriptionFields(prescription)) {
             addNewPresctiption(new Prescription(
-                    ePrescription.getPrescriptionId(),
-                    ePrescription.getMedicationId(),
-                    ePrescription.getPatientId(),
-                    ePrescription.getDosage(),
+                    prescription.getPrescriptionId(),
+                    prescription.getMedicationId(),
+                    prescription.getPatientId(),
+                    prescription.getDosage(),
                     "Pending",
-                    ePrescription.getNotes()));
+                    prescription.getNotes()));
 
             return true;
         }
