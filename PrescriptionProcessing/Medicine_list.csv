@@ -1,4 +1,4 @@
-Medicine Name,Sample ID,Associated Allergy Name,Associated Allergy ID,Other Medicine to Avoid Name,Other Medicine to Avoid ID,Current Inventory,Price Per Unit,Amount Sold,Minimum Quantity,Expiration Date,Controlled Substance,Supplier,Known Allergens
+Medicine Name,Medicine ID,Associated Allergy Name,Associated Allergy ID,Other Medicine to Avoid Name,Other Medicine to Avoid ID,Current Inventory,Price Per Unit,Amount Sold,Minimum Quantity,Expiration Date,Controlled Substance,Supplier,Known Allergens
 Aspirin,1,Salicylate,101.0,NSAIDs,201.0,150.0,9.99,45.0,30.0,2024-12-31,False,Bayer Pharmaceuticals,lactose;gluten
 Ibuprofen,2,NSAIDs,102.0,Aspirin,202.0,143.0,12.55,28.0,32.0,2024-05-10,False,Eli Lilly,corn;starch
 Paracetamol,3,None,103.0,None,203.0,56.0,25.23,33.0,38.0,2024-06-16,False,Bayer Pharmaceuticals,starch;wheat;gelatin
