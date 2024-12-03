@@ -74,9 +74,9 @@ public class PrescriptionService {
         return interactionCount;
     }
 
-    // add new prescription order (8.3.1)
+    // Add new prescription order (8.3.1)
     public boolean addNewPresctiption(Prescription prescription) {
-        //validate prescription fields
+        // Validate prescription fields
         if (!checkPrescriptionFields(prescription)) {
             System.out.println("Error: Prescription fields are invalid.");
             return false;
@@ -87,14 +87,14 @@ public class PrescriptionService {
             return false;
         }
 
-        // add to list
+        // Add to list
         prescriptionList.add(prescription);
         System.out.println("Prescription added successfully: " + prescription);
         return true;
 
     }
 
-    // get electronic prescription (8.3.2)
+    // Get electronic prescription (8.3.2)
     public boolean readNewPrescription(Prescription prescription) {
         if (checkPrescriptionFields(prescription)) {
             addNewPresctiption(new Prescription(
@@ -114,7 +114,7 @@ public class PrescriptionService {
         return false;
     }
 
-    // check that all fields are filled (8.3.3)
+    // Check that all fields are filled (8.3.3)
     public boolean checkPrescriptionFields(Prescription prescription) {
         return prescription.getPrescriptionId() != 0
                 && prescription.getPatientId() != 0
@@ -122,7 +122,7 @@ public class PrescriptionService {
                 && prescription.getNotes() != null;
     }
 
-    // checks for medication interactions (8.3.5)
+    // Checks for medication interactions (8.3.5)
     public boolean checkMedicationInteractions(int medicationId, List<String> currentMedications) {
         // Reads the medication interaction file and checks for interactions
         int interactionCount = readMedicineInteractionFile(medicineListFile, currentMedications, medicationId);
@@ -137,7 +137,7 @@ public class PrescriptionService {
         }
     }
 
-    // check allergies of patient (8.3.6)
+    // Check allergies of patient (8.3.6)
     public boolean checkAllergies(List<String> allergies, int medicationId, File allergiesFile) {
         // Read allergies file and compare both patient allergies and medication allergies
         int allgeryCount = readAllergyInteractionFile(medicineListFile, allergies, medicationId);
@@ -164,7 +164,7 @@ public class PrescriptionService {
         return null;
     }
 
-    // check that there is enough inventory (8.3.9)
+    // Check that there is enough inventory (8.3.9)
     public boolean checkInventory(File medicineListFile, int medicationId) {
         // Compares current inventory with minimum required quantity
         // Returns true if there is enough inventory, false otherwise
@@ -192,7 +192,7 @@ public class PrescriptionService {
         return false;
     }
 
-    // check expiration date (8.3.9)
+    // Check expiration date (8.3.9)
     public boolean checkExpiration(int medicationId, File medicineListFile, int patientId, Prescription prescription) {
         // Compares current date with expiration date
         // Could also calculate the number of days left until expiration or use the number of days needed to take the medication as a reference
@@ -233,17 +233,39 @@ public class PrescriptionService {
         return false;
     }
 
-    // collect all prescription history of a patient (8.3.10)
+    // Collect all prescription history of a patient (8.3.10)
     public void getPrescriptionHistory(int patientId) {
 
     }
 
-    // notify patients (8.3.11)
+    // Notify patients (8.3.11)
     public void sendNotification(int patientId, int prescriptionId) {
 
     }
 
-    // ensure no duplicate prescription (8.3.13)
+    // Check for controlled substances (8.3.12)
+    public boolean checkControlledSubstance(int medicationId, File medicineListFile) {
+        // Read the medicine list file and check if the medication is a controlled substance
+        try (BufferedReader br = new BufferedReader(new FileReader(medicineListFile))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+                if (values.length == 14) {
+                    int medId = Integer.parseInt(values[1]);
+                    String controlledSubstance = values[12];
+
+                    if (medId == medicationId) {
+                        return controlledSubstance.equalsIgnoreCase("Yes");
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading file: " + e.getMessage());
+        }
+        return false;
+    }
+
+    // Ensure no duplicate prescription (8.3.13)
     public boolean checkDuplicate(int patientId, int prescriptionId, int medicationId) {
         for (Prescription currentPrescription : prescriptionList) {
             if (currentPrescription.getPatientId() == patientId
@@ -255,9 +277,20 @@ public class PrescriptionService {
         return false;
     }
 
-    // record pickup confirmation
-    public boolean confirmPickup(int prescriptionId) {
+    // Add notes to prescription (8.3.14)
+    public boolean addNotes(int prescriptionId, String notes) {
+        for (Prescription currentPrescription : prescriptionList) {
+            if (currentPrescription.getPrescriptionId() == prescriptionId) {
+                currentPrescription.setNotes(notes);
+                return true;
+            }
+        }
+        return false;
+    }
 
+    // Record pickup confirmation (8.3.15)
+    public boolean confirmPickup(int prescriptionId) {
+        
     }
 
 }
