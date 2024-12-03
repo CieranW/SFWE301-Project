@@ -32,8 +32,8 @@ public class PrescriptionManager {
 
                 // Create a Prescription object
                 Prescription prescription = new Prescription(prescriptionID, patientName, patientID,
-                                                              medicationName, medicationID, dosage,
-                                                              numberOfDays, notes, status);
+                medicationName, medicationID, dosage,
+                numberOfDays, notes, status);
 
                 // Add to the map
                 prescriptionMap.put(prescriptionID, prescription);
@@ -44,7 +44,7 @@ public class PrescriptionManager {
                 System.out.println(entry.getValue());
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error reading the CSV file: " + e.getMessage());
         }
     }
 }
