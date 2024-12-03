@@ -269,8 +269,7 @@ public class PrescriptionService {
     public boolean checkDuplicate(int patientId, int prescriptionId, int medicationId) {
         for (Prescription currentPrescription : prescriptionList) {
             if (currentPrescription.getPatientId() == patientId
-                    && currentPrescription.getPrescriptionId() == prescriptionId
-                    && currentPrescription.getMedicationId() == medicationId) {
+                    && currentPrescription.getMedicationId() == medicationId || currentPrescription.getPrescriptionId() == prescriptionId) {
                 return true;
             }
         }
