@@ -1,20 +1,14 @@
 package PrescriptionProcessing;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import PrescriptionProcessing.Prescription;
-import PrescriptionProcessing.PrescriptionManager;
-import Patient.Patient;
-
-import java.io.File;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PrescriptionService {
 
@@ -225,7 +219,7 @@ public class PrescriptionService {
                             }
                         }
                         return false;
-                        
+
                     }
                 }
             }
@@ -236,8 +230,17 @@ public class PrescriptionService {
     }
 
     // Collect all prescription history of a patient (8.3.10)
-    public void getPrescriptionHistory(int patientId, HashMap<Integer, Prescription> prescriptionMap) {
-        
+    public List<Prescription> getPrescriptionHistory(int patientId) {
+        // Create new list to store prescription history
+        List<Prescription> history = new ArrayList<>();
+        // Loop through prescription list and add prescriptions with matching patientId to history list
+        for (Prescription prescription : prescriptionList) {
+            if (prescription.getPatientId() == patientId) {
+                history.add(prescription);
+            }
+        }
+        // Returns the prescription history list
+        return history;
     }
 
     // Check for controlled substances (8.3.12)
