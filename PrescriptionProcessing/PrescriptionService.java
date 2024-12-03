@@ -13,7 +13,7 @@ import java.io.IOException;
 public class PrescriptionService {
 
     private List<Prescription> prescriptionList = new ArrayList<>();
-    private File medicineListFile = new File("medicineList.csv");
+    private File medicineListFile = new File("Medicine_list.csv");
 
     public int readMedicineInteractionFile(File medicineListFile, List<String> currentMedications, int medicationId) {
         // Read csv file. Columns are Med1, Med1ID, Med2, Med2ID, Interaction
@@ -24,7 +24,7 @@ public class PrescriptionService {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                if (values.length == 6) {
+                if (values.length == 14) {
                     String med1 = values[0];
                     int med1Id = Integer.parseInt(values[1]);
                     String med2 = values[4];
@@ -53,7 +53,7 @@ public class PrescriptionService {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                if (values.length == 4) {
+                if (values.length == 14) {
                     String allergy = values[2];
                     int allergyId = Integer.parseInt(values[3]);
 
@@ -158,8 +158,30 @@ public class PrescriptionService {
     }
 
     // check that there is enough inventory (8.3.9)
-    public boolean checkInventory(int medicationId, int quantity) {
+    public boolean checkInventory(File medicineListFile, int medicationId) {
+        // Compares current inventory with minimum required quantity
+        // Returns true if there is enough inventory, false otherwise
+        try (BufferedReader br = new BufferedReader(new FileReader(medicineListFile))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+                if (values.length == 14) {
+                    int medId = Integer.parseInt(values[1]);
+                    int currentQuantity = Integer.parseInt(values[6]);
+                    int minQuantity = Integer.parseInt(values[9]);
 
+                    // Prescribed = 10, Current = 20, Min = 5
+                    // 20 >= 10 && 20 - 10 >= 5
+                    if (medId == medicationId) {
+                        if (currentQuantity >= minQuantity) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // check expiration date (8.3.9)
@@ -180,14 +202,13 @@ public class PrescriptionService {
     // ensure no duplicate prescription (8.3.13)
     public boolean checkDuplicate(int patientId, int prescriptionId, int medicationId) {
         for (Prescription currentPrescription : prescriptionList) {
-            if (existingPrescription.getPatientId() == patientId
-                    && existingPrescription.getPrescriptionId() == prescriptionId
-                    && existingPrescription.getMedicationId() == medicationId) {
-                return true; // duplicate is found
+            if (currentPrescription.getPatientId() == patientId
+                    && currentPrescription.getPrescriptionId() == prescriptionId
+                    && currentPrescription.getMedicationId() == medicationId) {
+                return true;
             }
         }
-
-        return false; // no duplicate found
+        return false;
     }
 
     // record pickup confirmation
