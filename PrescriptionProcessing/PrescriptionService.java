@@ -13,24 +13,22 @@ import java.io.IOException;
 public class PrescriptionService {
 
     private List<Prescription> prescriptionList = new ArrayList<>();
-    private File medicationInteractionFile;
-    private File allergiesFile;
+    private File medicineListFile = new File("medicineList.csv");
 
-    public int readMedicineInteractionFile(File medicationInteractionFile, List<String> currentMedications, int medicationId) {
+    public int readMedicineInteractionFile(File medicineListFile, List<String> currentMedications, int medicationId) {
         // Read csv file. Columns are Med1, Med1ID, Med2, Med2ID, Interaction
         // Return number of interactions found
         int interactionCount = 0;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(medicationInteractionFile))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(medicineListFile))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                if (values.length == 5) {
+                if (values.length == 6) {
                     String med1 = values[0];
                     int med1Id = Integer.parseInt(values[1]);
-                    String med2 = values[2];
-                    int med2Id = Integer.parseInt(values[3]);
-                    String interaction = values[4];
+                    String med2 = values[4];
+                    int med2Id = Integer.parseInt(values[5]);
 
                     if (med1Id == medicationId || med2Id == medicationId) {
                         if (currentMedications.contains(med1) || currentMedications.contains(med2)) {
@@ -46,20 +44,18 @@ public class PrescriptionService {
         return interactionCount;
     }
 
-    public int readAllergyInteractionFile(File allergiesFile, List<String> allergies, int medicationId) {
+    public int readAllergyInteractionFile(File medicineListFile, List<String> allergies, int medicationId) {
         // Read csv file. Columns are Allergy, AllergyID, Medication, MedicationID
         // Return number of interactions found
         int interactionCount = 0;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(allergiesFile))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(medicineListFile))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
                 if (values.length == 4) {
-                    String allergy = values[0];
-                    int allergyId = Integer.parseInt(values[1]);
-                    String allergyMedication = values[2];
-                    int allergyMedicationId = Integer.parseInt(values[3]);
+                    String allergy = values[2];
+                    int allergyId = Integer.parseInt(values[3]);
 
                     if (allergyId == medicationId) {
                         if (allergies.contains(allergy)) {
@@ -122,7 +118,7 @@ public class PrescriptionService {
     // checks for medication interactions (8.3.5)
     public boolean checkMedicationInteractions(int medicationId, List<String> currentMedications) {
         // Reads the medication interaction file and checks for interactions
-        int interactionCount = readMedicineInteractionFile(medicationInteractionFile, currentMedications, medicationId);
+        int interactionCount = readMedicineInteractionFile(medicineListFile, currentMedications, medicationId);
 
         // If the count is greater than 0, interactions are found
         if (interactionCount > 0) {
@@ -137,7 +133,7 @@ public class PrescriptionService {
     // check allergies of patient (8.3.6)
     public boolean checkAllergies(List<String> allergies, int medicationId, File allergiesFile) {
         // Read allergies file and compare both patient allergies and medication allergies
-        int allgeryCount = readAllergyInteractionFile(allergiesFile, allergies, medicationId);
+        int allgeryCount = readAllergyInteractionFile(medicineListFile, allergies, medicationId);
 
         // If the count is greater than 0, interactions are found
         if (allgeryCount > 0) {
@@ -151,7 +147,14 @@ public class PrescriptionService {
 
     // track current status of prescription (8.3.8)
     public String trackStatus(int prescriptionId, String status) {
-        //TODO: create 
+        for (Prescription currentPrescription : prescriptionList) {
+            if (currentPrescription.getPrescriptionId() == prescriptionId) {
+                currentPrescription.setStatus(status);
+                return status;
+            }
+        }
+
+        return null;
     }
 
     // check that there is enough inventory (8.3.9)

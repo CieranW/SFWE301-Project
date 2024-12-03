@@ -1,0 +1,21 @@
+Medicine Name,Sample ID,Associated Allergy Name,Associated Allergy ID,Other Medicine to Avoid Name,Other Medicine to Avoid ID
+Aspirin,1,Salicylate,101,NSAIDs,201
+Ibuprofen,2,NSAIDs,102,Aspirin,202
+Paracetamol,3,None,103,None,203
+Amoxicillin,4,Penicillin,104,Cephalosporins,204
+Ciprofloxacin,5,Fluoroquinolone,105,Macrolides,205
+Metformin,6,None,106,None,206
+Omeprazole,7,Proton Pump Inhibitors,107,None,207
+Lisinopril,8,ACE Inhibitors,108,ARBs,208
+Simvastatin,9,None,109,None,209
+Cetirizine,10,Antihistamines,110,Other Antihistamines,210
+Albuterol,11,None,111,Beta Agonists,211
+Clopidogrel,12,None,112,Anticoagulants,212
+Warfarin,13,Vitamin K Antagonists,113,Aspirin,213
+Insulin,14,None,114,None,214
+Hydrochlorothiazide,15,Sulfonamides,115,Loop Diuretics,215
+Doxycycline,16,Tetracycline,116,None,216
+Atorvastatin,17,Statins,117,Other Statins,217
+Prednisone,18,Corticosteroids,118,None,218
+Levothyroxine,19,None,119,None,219
+Fluoxetine,20,SSRIs,120,Other SSRIs,220
