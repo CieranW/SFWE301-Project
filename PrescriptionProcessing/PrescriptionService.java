@@ -14,6 +14,7 @@ public class PrescriptionService {
 
     private List<Prescription> prescriptionList = new ArrayList<>();
     private File medicationInteractionFile;
+    private File allergiesFile;
 
     public int readMedicineInteractionFile(File medicationInteractionFile, List<String> currentMedications, int medicationId) {
         // Read csv file. Columns are Med1, Med1ID, Med2, Med2ID, Interaction
@@ -33,6 +34,35 @@ public class PrescriptionService {
 
                     if (med1Id == medicationId || med2Id == medicationId) {
                         if (currentMedications.contains(med1) || currentMedications.contains(med2)) {
+                            interactionCount++;
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return interactionCount;
+    }
+
+    public int readAllergyInteractionFile(File allergiesFile, List<String> allergies, int medicationId) {
+        // Read csv file. Columns are Allergy, AllergyID, Medication, MedicationID
+        // Return number of interactions found
+        int interactionCount = 0;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(allergiesFile))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+                if (values.length == 4) {
+                    String allergy = values[0];
+                    int allergyId = Integer.parseInt(values[1]);
+                    String allergyMedication = values[2];
+                    int allergyMedicationId = Integer.parseInt(values[3]);
+
+                    if (allergyId == medicationId) {
+                        if (allergies.contains(allergy)) {
                             interactionCount++;
                         }
                     }
@@ -105,10 +135,18 @@ public class PrescriptionService {
     }
 
     // check allergies of patient (8.3.6)
-    public boolean checkAllergies(Patient patient, int medicationId) {
-        return true;
+    public boolean checkAllergies(List<String> allergies, int medicationId, File allergiesFile) {
+        // Read allergies file and compare both patient allergies and medication allergies
+        int allgeryCount = readAllergyInteractionFile(allergiesFile, allergies, medicationId);
 
-        //need to create list of known allergic reactions with medications and a method to get that list
+        // If the count is greater than 0, interactions are found
+        if (allgeryCount > 0) {
+            System.out.println("Interaction found: " + allgeryCount);
+            return true;
+        } else {
+            System.out.println("No interactions found.");
+            return false;
+        }
     }
 
     // track current status of prescription (8.3.8)

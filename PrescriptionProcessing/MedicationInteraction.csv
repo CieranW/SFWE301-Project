@@ -1,6 +1,6 @@
 Medication1,Med1ID,Medication2,Med2ID,Interaction
 Aspirin,12345,Warfarin,23456,Increased risk of bleeding
-Ibuprofen,56789,Lisinopril,26478,Reduced effectiveness of Lisinopril
+Ibuprofen,10008,Lisinopril,26478,Reduced effectiveness of Lisinopril
 Simvastatin,21364,Grapefruit,31756,Increased risk of side effects
 Metformin,38620,Alcohol,95463,Increased risk of lactic acidosis
-Amoxicillin,34635,Allopurinol,77128,Increased risk of skin rash
+Amoxicillin,10003,Allopurinol,77128,Increased risk of skin rash

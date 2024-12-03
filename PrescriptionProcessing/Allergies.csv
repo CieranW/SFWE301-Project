@@ -1,13 +1,13 @@
-Allergy,Medication
-Peanuts,Epinephrine
-Shellfish,Iodine
-Penicillin,Amoxicillin
-Latex,Prednisone
-Bee Stings,Epinephrine
-Milk,Lactase
-Eggs,Influenza Vaccine
-Soy,Ibuprofen
-Wheat,Gluten
-Fish,Omega-3 Supplements
-Tree Nuts,Almond Oil
-Sesame,Antihistamines
+Allergy,Allergy ID,Medication,Medicine ID
+Peanuts,1,Epinephrine,10001
+Shellfish,2,Iodine,10002
+Penicillin,3,Amoxicillin,10003
+Latex,4,Prednisone,10004
+Bee Stings,5,Epinephrine,10005
+Milk,6,Lactase,10006
+Eggs,7,Influenza Vaccine,10007
+Soy,8,Ibuprofen,10008
+Wheat,9,Gluten,10009
+Fish,10,Omega-3 Supplements,10010
+Tree Nuts,11,Almond Oil,10011
+Sesame,12,Antihistamines,10012
