@@ -1,5 +1,4 @@
 Prescription ID,Patient Name,Patient ID,Medication Name,Medication ID,Dosage,Number of Days to Take Medication,Daily Intake,Status,Notes
-
 20001,Tonya Miller,10008,Alprazolam,7,1,10,2,Pending Approval, Take twice a day
 20002,Carla Ramirez,10026,Amoxicillin,3,2 ,14,1,Pending Approval, Take at night
 20003,Jessica Atkins,10014,Pantoprazole,19,2 ,5,1,Pending Approval, Take in morning

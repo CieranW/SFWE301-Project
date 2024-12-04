@@ -5,18 +5,20 @@ import java.util.List;
 public class Patient {
     
     private int patientId;
-    private String name;
+    private String patientName;
     private List<String> allergies;
+    private List<Integer> allergyId;
     private List<String> currentMedications;
-    private String phoneNumber;
+    private List<Integer> currentMedsId;
 
-    public Patient(int patientId, String name, List<String> allergies, List<String> currentMedications, String phoneNumber) {
+    public Patient(String patientName, int patientId, List<String> allergies, List<Integer> allergyId, List<String> currentMedications, List<Integer> currentMedsId) {
 
         this.patientId = patientId;
-        this.name = name;
+        this.patientName = patientName;
         this.allergies = allergies;
+        this.allergyId = allergyId;
         this.currentMedications = currentMedications;
-        this.phoneNumber = phoneNumber;
+        this.currentMedsId = currentMedsId;
     }
 
     public int getPatientId() {
@@ -27,12 +29,12 @@ public class Patient {
         this.patientId = patientId;
     }
 
-    public String getName() {
-        return name;
+    public String getPatientName() {
+        return patientName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPatientName(String patientName) {
+        this.patientName = patientName;
     }
 
     public List<String> getAllergies() {
@@ -43,6 +45,14 @@ public class Patient {
         this.allergies = allergies;
     }
 
+    public List<Integer> getAllergyId() {
+        return allergyId;
+    }
+
+    public void setAllergyId(List<Integer> allergyId) {
+        this.allergyId = allergyId;
+    }
+
     public List<String> getCurrentMedications() {
         return currentMedications;
     }
@@ -51,11 +61,23 @@ public class Patient {
         this.currentMedications = currentMedications;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public List<Integer> getCurrentMedsId() {
+        return currentMedsId;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setCurrentMedsId(List<Integer> currentMedsId) {
+        this.currentMedsId = currentMedsId;
+    }
+
+    @Override
+    public String toString() {
+        return "Patient{" +
+               "patientName='" + patientName + '\'' +
+               ", patientId=" + patientId +
+               ", allergies=" + allergies +
+               ", allergyIds=" + allergyId +
+               ", currentMedications=" + currentMedications +
+               ", medicationIds=" + currentMedsId +
+               '}';
     }
 }

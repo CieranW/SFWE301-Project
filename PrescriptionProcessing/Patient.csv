@@ -1,5 +1,4 @@
 Patient Name,Patient ID,Allergies,Allergy ID,Current Medication,Medication Id
-
 Megan Barrett,10001,lactose,1,Amlodipine;Metoprolol;Sertraline,12;10;6
 Beth Reyes,10002,gluten,2,Amlodipine,12
 Debra Zamora,10003,penicillin;wheat,5;4,Aspirin;Lisinopril,1;2
