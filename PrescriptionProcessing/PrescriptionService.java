@@ -237,8 +237,15 @@ public class PrescriptionService {
     }
 
     // Collect all prescription history of a patient (8.3.10)
-    public void getPrescriptionHistory(int patientId, HashMap<Integer, Prescription> prescriptionMap) {
-        
+    public Prescription getPrescriptionHistory(int patientId, HashMap<Integer, Prescription> prescriptionMap) {
+        // Uses patient ID to retrieve all prescriptions with matching patient ID from the prescription map
+        // Puts all matches into a new prescription array, returns array
+        for (Prescription prescription : prescriptionMap.values()) {
+            if (prescription.getPatientId() == patientId) {
+                return prescription;
+            }
+        }
+        return null; // Return null if no matching prescription is found
     }
 
     // Notify patients (8.3.11)
