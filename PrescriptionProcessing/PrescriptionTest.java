@@ -74,20 +74,6 @@ public class PrescriptionTest {
                 // Split each line by comma
                 String[] data = patientLine.split(patientCsvSplitBy);
 
-                // Parse allergies and their IDs
-                List<String> allergies = Arrays.asList(data[2].split(";"));
-                List<Integer> allergyIds = Arrays.asList(data[3].split(";"))
-                        .stream()
-                        .map(Integer::parseInt)
-                        .collect(Collectors.toList());
-
-                // Parse current medications and their IDs
-                List<String> medications = Arrays.asList(data[4].split(";"));
-                List<Integer> medicationIds = Arrays.asList(data[5].split(";"))
-                                                    .stream()
-                                                    .map(Integer::parseInt)
-                                                    .collect(Collectors.toList());
-
                 // Create a Patient object and add it to the list
                 patients.add(new Patient(
                         data[0], // Patient Name
