@@ -1,28 +1,23 @@
 package PrescriptionProcessing;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import PrescriptionProcessing.Prescription;
-import PrescriptionProcessing.PrescriptionManager;
-import Patient.Patient;
-
-import java.io.File;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PrescriptionService {
 
     private List<Prescription> prescriptionList = new ArrayList<>();
-    private File medicineListFile = new File("Medicine_list.csv");
+    private File medicineListFile = new File("Medicine_List_v2.csv");
+    private File inventoryFile = new File("InventoryControl/Inventory.csv");
 
     public int readMedicineInteractionFile(File medicineListFile, List<String> currentMedications, int medicationId) {
-        // Read csv file. Columns are Med1, Med1ID, Med2, Med2ID, Interaction
+        // Read csv file
         // Return number of interactions found
         int interactionCount = 0;
 
@@ -30,7 +25,7 @@ public class PrescriptionService {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                if (values.length == 14) {
+                if (values.length == 6) {
                     String med1 = values[0];
                     int med1Id = Integer.parseInt(values[1]);
                     String med2 = values[4];
@@ -59,7 +54,7 @@ public class PrescriptionService {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                if (values.length == 14) {
+                if (values.length == 6) {
                     String allergy = values[2];
                     int allergyId = Integer.parseInt(values[3]);
 
@@ -109,8 +104,7 @@ public class PrescriptionService {
                     prescription.getDosage(),
                     prescription.getNumDays(),
                     "Pending Approval",
-                    prescription.getNotes(),
-                    prescription.getRetrievalMethod()));
+                    prescription.getNotes()));
 
             return true;
         }
@@ -121,7 +115,7 @@ public class PrescriptionService {
     public boolean checkPrescriptionFields(Prescription prescription) {
         return prescription.getPrescriptionId() != 0
                 && prescription.getPatientId() != 0
-                && prescription.getDosage() != null
+                && prescription.getDosage() != 0
                 && prescription.getNotes() != null;
     }
 
@@ -168,72 +162,63 @@ public class PrescriptionService {
     }
 
     // Check that there is enough inventory (8.3.9)
-    public boolean checkInventory(File medicineListFile, int medicationId) {
-        // Compares current inventory with minimum required quantity
-        // Returns true if there is enough inventory, false otherwise
-        try (BufferedReader br = new BufferedReader(new FileReader(medicineListFile))) {
+    public boolean checkInventory(File inventoryFile, int medicationId, int dosage, int numDays) {
+        // Access inventory stock amount
+        // Calculate total mediciation patient needs
+        // Ensure total number is less than inventory stock
+        try (BufferedReader reader = new BufferedReader(new FileReader(inventoryFile))) {
             String line;
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                if (values.length == 14) {
-                    int medId = Integer.parseInt(values[1]);
-                    int currentQuantity = Integer.parseInt(values[6]);
-                    int minQuantity = Integer.parseInt(values[9]);
+            while ((line = reader.readLine()) != null) {
+                // Assume the CSV format is: MedicationID,CurrentInventory
+                String[] parts = line.split(",");
+                int id = Integer.parseInt(parts[0].trim());
+                int currentInventory = Integer.parseInt(parts[2].trim());
+                
+                if (id == medicationId) {
+                    // Calculate the total medication required
+                    int totalMedicationRequired = dosage * numDays;
 
-                    // Prescribed = 10, Current = 20, Min = 5
-                    // 20 >= 10 && 20 - 10 >= 5
-                    if (medId == medicationId) {
-                        if (currentQuantity >= minQuantity) {
-                            return true;
-                        }
-                    }
+                    // Check if the inventory can cover the required medication
+                    return currentInventory >= totalMedicationRequired;
                 }
             }
-        } catch (IOException e) {
-            System.err.println("Error reading file: " + e.getMessage());
+        } catch (IOException | NumberFormatException e) {
+            e.printStackTrace(); // Log exception for debugging purposes
         }
-        return false;
+        return false; // Return false if medication ID not found or error occurs
     }
 
     // Check expiration date (8.3.9)
-    public boolean checkExpiration(int medicationId, File medicineListFile, int patientId, Prescription prescription) {
+    public boolean checkExpiration(File invetoryFile, int medicationId, int numDays) {
         // Compares current date with expiration date
         // Could also calculate the number of days left until expiration or use the number of days needed to take the medication as a reference
         // Returns true if the medication is not expired, false otherwise
-        try (BufferedReader br = new BufferedReader(new FileReader(medicineListFile))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(inventoryFile))) {
             String line;
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                if (values.length == 14) {
-                    int medId = Integer.parseInt(values[1]);
-                    String expirationDate = values[10];
+            while ((line = reader.readLine()) != null) {
+                // Assume the CSV format is: MedicationID,ExpirationDate (YYYY-MM-DD)
+                String[] parts = line.split(",");
+                int id = Integer.parseInt(parts[0].trim());
+                String expirationDateStr = parts[5].trim();
+                
+                if (id == medicationId) {
+                    // Parse the expiration date
+                    LocalDate expirationDate = LocalDate.parse(expirationDateStr, DateTimeFormatter.ISO_LOCAL_DATE);
 
-                    if (medId == medicationId && patientId == prescription.getPatientId()) {
-                        // Compare expiration date with current date
-                        // If expiration date is greater than current date, return true
-                        // Otherwise, return false
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                        LocalDate currentDate = LocalDate.now();
-                        LocalDate expDate = LocalDate.parse(expirationDate, formatter);
+                    // Get the current date
+                    LocalDate currentDate = LocalDate.now();
 
-                        // Assuming the number of days the medicine needs to be taken for is provided
-                        int daysToTakeMedicine = 30; // Example value
+                    // Calculate the last valid date for the prescription
+                    LocalDate prescriptionEndDate = currentDate.plusDays(numDays);
 
-                        if (expDate.isAfter(currentDate)) {
-                            long daysUntilExpiration = ChronoUnit.DAYS.between(currentDate, expDate);
-                            if (daysUntilExpiration >= daysToTakeMedicine) {
-                                return true;
-                            }
-                        }
-                        return false;
-                        
-                    }
+                    // Check if the medication will remain valid for the entire duration
+                    return !currentDate.isAfter(expirationDate) && !prescriptionEndDate.isAfter(expirationDate);
                 }
             }
-        } catch (IOException e) {
-            System.err.println("Error reading file: " + e.getMessage());
+        } catch (IOException | NumberFormatException e) {
+            e.printStackTrace();
         }
-        return false;
+        return false; // Return false if medication ID not found or error occurs
     }
 
     // Collect all prescription history of a patient (8.3.10)
@@ -279,8 +264,7 @@ public class PrescriptionService {
     public boolean checkDuplicate(int patientId, int prescriptionId, int medicationId) {
         for (Prescription currentPrescription : prescriptionList) {
             if (currentPrescription.getPatientId() == patientId
-                    && currentPrescription.getPrescriptionId() == prescriptionId
-                    && currentPrescription.getMedicationId() == medicationId) {
+                    && currentPrescription.getMedicationId() == medicationId || currentPrescription.getPrescriptionId() == prescriptionId) {
                 return true;
             }
         }
@@ -296,11 +280,6 @@ public class PrescriptionService {
             }
         }
         return false;
-    }
-
-    // Record pickup confirmation (8.3.15)
-    public boolean confirmPickup(int prescriptionId) {
-        
     }
 
 }

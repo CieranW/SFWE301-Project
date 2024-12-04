@@ -1,31 +1,32 @@
-Patient Name,Patient ID,Allergies,Current Medication,Phone Number
-Megan Barrett,10001,lactose,Amlodipine;Metoprolol;Sertraline,3760132489
-Beth Reyes,10002,gluten,Amlodipine,6995092750
-Debra Zamora,10003,penicillin;wheat,Aspirin;Lisinopril,1790645923
-Rachel Brown,10004,soy;lactose;none,Sertraline;Metformin,2106949823
-Rachel Robinson,10005,gluten;penicillin;corn,Metoprolol,1683472823
-Arthur Chang,10006,lactose,Methylphenidate;Metoprolol;Escitalopram,2890361063
-Grant Mathis,10007,soy,Tramadol;Hydrochlorothiazide,6711676782
-Tonya Miller,10008,wheat;lactose;corn,Sertraline;Pantoprazole,7380934192
-Vanessa Castillo,10009,starch,Fluoxetine;Hydrochlorothiazide,9550906560
-Taylor Santos,10010,penicillin;lactose;none,Metoprolol;Gabapentin,1989193602
-Richard Kramer,10011,starch;none,Oxycodone,3279071832
-Stephen Parsons,10012,corn,Omeprazole;Metoprolol;Amoxicillin,2277576932
-Leah Stokes,10013,penicillin;gluten,Prednisone;Pantoprazole,9240462811
-Jessica Atkins,10014,starch;corn;none,Tramadol;Levothyroxine;Alprazolam,3509949933
-Miss Holly Young,10015,wheat;sulfa,Pantoprazole,5577230271
-Nicole Hughes,10016,wheat;lactose;starch,Gabapentin,3530259622
-Katie Griffith,10017,starch;lactose;penicillin,Levothyroxine;Oxycodone;Amlodipine,8988034969
-Charles Phillips,10018,none;lactose,Methylphenidate;Prednisone;Gabapentin,6080166458
-Alejandro Fisher,10019,gluten;wheat,Hydrochlorothiazide;Oxycodone;Prednisone,4519197590
-Charles Mitchell,10020,starch,Escitalopram;Fluoxetine;Metformin,9007234560
-Jennifer Gallagher,10021,starch;sulfa;penicillin,Lisinopril,6269586531
-Valerie Crawford,10022,wheat;starch,Tramadol,7678481742
-Jeremy Cooley,10023,none;starch,Levothyroxine,8719461621
-Chelsea Lyons,10024,corn;penicillin,Fluoxetine;Amlodipine;Gabapentin,9849833514
-Mary Simon,10025,soy,Escitalopram,4906035264
-Carla Ramirez,10026,sulfa;none;soy,Amoxicillin;Amlodipine,6726029335
-Bailey Lopez,10027,sulfa,Sertraline,6526332850
-Pamela Nguyen,10028,lactose;gluten;starch,Amlodipine;Gabapentin;Hydrochlorothiazide,2758618552
-Sarah Pope,10029,gluten;lactose,Gabapentin,3656724909
-Theresa Garza,10030,starch,Lisinopril;Amlodipine;Amoxicillin,7904341977
+Patient Name,Patient ID,Allergies,Allergy ID,Current Medication,Medication Id
+
+Megan Barrett,10001,lactose,1,Amlodipine;Metoprolol;Sertraline,12;10;6
+Beth Reyes,10002,gluten,2,Amlodipine,12
+Debra Zamora,10003,penicillin;wheat,5;4,Aspirin;Lisinopril,1;2
+Rachel Brown,10004,soy;lactose,3;1,Sertraline;Metformin,6;4
+Rachel Robinson,10005,gluten;penicillin;corn,2;5;8,Metoprolol,10
+Arthur Chang,10006,lactose,1,Methylphenidate;Metoprolol;Escitalopram,13;10;18
+Grant Mathis,10007,soy,3,Tramadol;Hydrochlorothiazide,20;8
+Tonya Miller,10008,wheat;lactose;corn,4;1;8,Sertraline;Pantoprazole,6;19
+Vanessa Castillo,10009,starch,9,Fluoxetine;Hydrochlorothiazide,14;8
+Taylor Santos,10010,penicillin;lactose,5;1,Metoprolol;Gabapentin,10;9
+Richard Kramer,10011,starch,9,Oxycodone,5
+Stephen Parsons,10012,corn,8,Omeprazole;Metoprolol;Amoxicillin,15;10;3
+Leah Stokes,10013,penicillin;gluten,5;2,Prednisone;Pantoprazole,11;19
+Jessica Atkins,10014,starch;corn,9;8,Tramadol;Levothyroxine;Alprazolam,20;16;7
+Miss Holly Young,10015,wheat;sulfa,4;6,Pantoprazole,19
+Nicole Hughes,10016,wheat;lactose;starch,4;1;9,Gabapentin,9
+Katie Griffith,10017,starch;lactose;penicillin,9;1;5,Levothyroxine;Oxycodone;Amlodipine,16;7
+Charles Phillips,10018,none,20,Methylphenidate;Prednisone;Gabapentin,13;11;9
+Alejandro Fisher,10019,gluten;wheat,2;4,none,0
+Charles Mitchell,10020,starch,9,Escitalopram;Fluoxetine;Metformin,18;14;4
+Jennifer Gallagher,10021,starch;sulfa;penicillin,9;6;5,Lisinopril,2
+Valerie Crawford,10022,wheat;starch,4;9,Tramadol,20
+Jeremy Cooley,10023,starch,9,Levothyroxine,16
+Chelsea Lyons,10024,corn;penicillin,8;5,Fluoxetine;Amlodipine;Gabapentin,14;12;9
+Mary Simon,10025,soy,3,Escitalopram,18
+Carla Ramirez,10026,sulfa;soy,6;3,Amoxicillin;Amlodipine,3;12
+Bailey Lopez,10027,sulfa,6,Sertraline,6
+Pamela Nguyen,10028,lactose;gluten;starch,1;2;9,none,0
+Sarah Pope,10029,gluten;lactose,2;1,Gabapentin,9
+Theresa Garza,10030,starch,9,Lisinopril;Amlodipine;Amoxicillin,2;12;3

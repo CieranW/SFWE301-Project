@@ -7,13 +7,12 @@ public class Prescription {
     private int medicationId;
     private String patientName;
     private int patientId;
-    private String dosage;
+    private int dosage;
     private int numDays;
     private String status;
     private String notes;
-    private String retrievalMethod;
 
-    public Prescription(int prescriptionId, String medicationName, int medicationId, String patientName, int patientId, String dosage, int numDays, String status, String notes, String retrievalMethod) {
+    public Prescription(int prescriptionId, String medicationName, int medicationId, String patientName, int patientId, int dosage, int numDays, String status, String notes) {
         this.prescriptionId = prescriptionId;
         this.medicationName = medicationName;
         this.medicationId = medicationId;
@@ -23,7 +22,6 @@ public class Prescription {
         this.numDays = numDays;
         this.status = status;
         this.notes = notes;
-        this.retrievalMethod = retrievalMethod;
     }
 
     public int getPrescriptionId() {
@@ -66,11 +64,11 @@ public class Prescription {
         this.patientId = patientId;
     }
 
-    public String getDosage() {
+    public int getDosage() {
         return dosage;
     }
 
-    public void setDosage(String dosage) {
+    public void setDosage(int dosage) {
         this.dosage = dosage;
     }
 
@@ -96,14 +94,6 @@ public class Prescription {
 
     public void setNotes(String notes) {
         this.notes = notes;
-    }
-
-    public String getRetrievalMethod() {
-        return retrievalMethod;
-    }
-
-    public void setRetrievalMethod(String retrievalMethod) {
-        this.retrievalMethod = retrievalMethod;
     }
 
 }

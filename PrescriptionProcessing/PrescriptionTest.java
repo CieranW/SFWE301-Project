@@ -14,17 +14,6 @@ public class PrescriptionTest {
 
     // Main method
     public static void main(String[] args) {
-        // Creating an object of PrescriptionService
-        PrescriptionService prescriptionService = new PrescriptionService();
-        // Creating an object of Prescription
-        Prescription prescription = new Prescription(1, 1, 1, "10mg", "Pending", "Take with food");
-        // Adding a new prescription
-        prescriptionService.addNewPresctiption(prescription);
-        // Creating a list of current medications
-        List<String> currentMedications = new ArrayList<>();
-        currentMedications.add("Medication A");
-        currentMedications.add("Medication B");
-        // Checking medication interactions
-        prescriptionService.checkMedicationInteractions(1, currentMedications);
+
     }
 }
