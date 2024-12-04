@@ -14,6 +14,7 @@ public class PrescriptionService {
 
     private List<Prescription> prescriptionList = new ArrayList<>();
     private File medicineListFile = new File("Medicine_List_v2.csv");
+    private File inventoryFile = new File("InventoryControl/Inventory.csv");
 
     public int readMedicineInteractionFile(File medicineListFile, List<String> currentMedications, int medicationId) {
         // Read csv file
@@ -114,7 +115,7 @@ public class PrescriptionService {
     public boolean checkPrescriptionFields(Prescription prescription) {
         return prescription.getPrescriptionId() != 0
                 && prescription.getPatientId() != 0
-                && prescription.getDosage() != null
+                && prescription.getDosage() != 0
                 && prescription.getNotes() != null;
     }
 
@@ -161,31 +162,30 @@ public class PrescriptionService {
     }
 
     // Check that there is enough inventory (8.3.9)
-    public boolean checkInventory(File medicineListFile, int medicationId) {
-        // Compares current inventory with minimum required quantity
-        // Returns true if there is enough inventory, false otherwise
-        try (BufferedReader br = new BufferedReader(new FileReader(medicineListFile))) {
+    public boolean checkInventory(File inventoryFile, int medicationId, int dosage, int numDays) {
+        // Access inventory stock amount
+        // Calculate total mediciation patient needs
+        // Ensure total number is less than inventory stock
+        try (BufferedReader reader = new BufferedReader(new FileReader(inventoryFile))) {
             String line;
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                if (values.length == 14) {
-                    int medId = Integer.parseInt(values[1]);
-                    int currentQuantity = Integer.parseInt(values[6]);
-                    int minQuantity = Integer.parseInt(values[9]);
+            while ((line = reader.readLine()) != null) {
+                // Assume the CSV format is: MedicationID,CurrentInventory
+                String[] parts = line.split(",");
+                int id = Integer.parseInt(parts[0].trim());
+                int currentInventory = Integer.parseInt(parts[1].trim());
+                
+                if (id == medicationId) {
+                    // Calculate the total medication required
+                    int totalMedicationRequired = dosage * numDays;
 
-                    // Prescribed = 10, Current = 20, Min = 5
-                    // 20 >= 10 && 20 - 10 >= 5
-                    if (medId == medicationId) {
-                        if (currentQuantity >= minQuantity) {
-                            return true;
-                        }
-                    }
+                    // Check if the inventory can cover the required medication
+                    return currentInventory >= totalMedicationRequired;
                 }
             }
-        } catch (IOException e) {
-            System.err.println("Error reading file: " + e.getMessage());
+        } catch (IOException | NumberFormatException e) {
+            e.printStackTrace(); // Log exception for debugging purposes
         }
-        return false;
+        return false; // Return false if medication ID not found or error occurs
     }
 
     // Check expiration date (8.3.9)

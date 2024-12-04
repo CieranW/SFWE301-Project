@@ -7,12 +7,12 @@ public class Prescription {
     private int medicationId;
     private String patientName;
     private int patientId;
-    private String dosage;
+    private int dosage;
     private int numDays;
     private String status;
     private String notes;
 
-    public Prescription(int prescriptionId, String medicationName, int medicationId, String patientName, int patientId, String dosage, int numDays, String status, String notes) {
+    public Prescription(int prescriptionId, String medicationName, int medicationId, String patientName, int patientId, int dosage, int numDays, String status, String notes) {
         this.prescriptionId = prescriptionId;
         this.medicationName = medicationName;
         this.medicationId = medicationId;
@@ -64,11 +64,11 @@ public class Prescription {
         this.patientId = patientId;
     }
 
-    public String getDosage() {
+    public int getDosage() {
         return dosage;
     }
 
-    public void setDosage(String dosage) {
+    public void setDosage(int dosage) {
         this.dosage = dosage;
     }
 
