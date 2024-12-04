@@ -27,11 +27,12 @@ public class PrescriptionManager {
                 int medicationID = Integer.parseInt(fields[4].trim());
                 int dosage = Integer.parseInt(fields[5].trim());
                 int numDays = Integer.parseInt(fields[6].trim());
-                String notes = fields[7].trim();
-                String status = fields[8].trim();
+                int dailyIntake = Integer.parseInt(fields[7].trim());
+                String notes = fields[8].trim();
+                String status = fields[9].trim();
 
                 // Create a Prescription object
-                Prescription prescription = new Prescription(prescriptionID, medicationName, medicationID, patientName, patientID, dosage, numDays, status, notes);
+                Prescription prescription = new Prescription(prescriptionID, patientName, patientID, medicationName, medicationID, dosage, numDays, dailyIntake, notes, status);
 
                 // Add to the map
                 prescriptionMap.put(prescriptionID, prescription);
