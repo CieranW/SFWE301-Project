@@ -92,10 +92,14 @@ public class PrescriptionTest {
                 patients.add(new Patient(
                         data[0], // Patient Name
                         Integer.parseInt(data[1]), // Patient ID
-                        data[2], // Allergies
-                        Integer.parseInt(data[3]), // Allergy IDs
-                        data[4], // Current Medications
-                        Integer.parseInt(data[1]) // Medication IDs
+                        Arrays.asList(data[2].split(";")), // Allergies (List<String>)
+                        Arrays.stream(data[3].split(";")) // Allergy IDs (List<Integer>)
+                              .map(Integer::parseInt)
+                              .collect(Collectors.toList()),
+                        Arrays.asList(data[4].split(";")), // Current Medications (List<String>)
+                        Arrays.stream(data[5].split(";")) // Medication IDs (List<Integer>)
+                              .map(Integer::parseInt)
+                              .collect(Collectors.toList())
                 ));
             }
 
