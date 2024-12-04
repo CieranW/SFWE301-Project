@@ -24,7 +24,7 @@ public class PrescriptionService {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                if (values.length == 6) {
+                if (values.length == 8) {
                     String med1 = values[0];
                     int med1Id = Integer.parseInt(values[1]);
                     String med2 = values[4];
@@ -53,7 +53,7 @@ public class PrescriptionService {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                if (values.length == 6) {
+                if (values.length == 8) {
                     String allergy = values[2];
                     int allergyId = Integer.parseInt(values[3]);
 
