@@ -13,8 +13,7 @@ public class Prescription {
     private String status;
     private String notes;
 
-    public Prescription(int prescriptionId, String medicationName, int medicationId, String patientName, int patientId, int dosage, int numDays, int dailyIntake, String status, String notes) {
-        this.prescriptionId = prescriptionId;
+    public Prescription(String patientName, int patientId, String medicationName, int medicationId, int dosage, int numDays, int dailyIntake, String status, String notes) {
         this.medicationName = medicationName;
         this.medicationId = medicationId;
         this.patientName = patientName;
@@ -31,7 +30,7 @@ public class Prescription {
     }
 
     public void setPrescriptionId(int prescriptionId) {
-        this.prescriptionId = prescriptionId;
+        this.prescriptionId = calculatePrescriptionID(prescriptionId);
     }
 
     public String getMedicationName() {
@@ -119,6 +118,15 @@ public class Prescription {
                ", notes='" + notes + '\'' +
                ", status='" + status + '\'' +
                '}';
+    }
+
+    public int calculatePrescriptionID(int prescriptionID) {
+        prescriptionID += 1;
+        return prescriptionID;
+    }
+
+    public int calculateDosage(int numDays, int dailyIntake) {
+        return numDays * dailyIntake;
     }
 
 }

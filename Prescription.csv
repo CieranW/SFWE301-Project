@@ -1,0 +1,24 @@
+Patient Name,Patient ID,Medication Name,Medication ID,Dosage,Number of Days to Take Medication,Daily Intake,Status,Notes
+Tonya Miller,10008,Alprazolam,7,1,10,2,Pending Approval,Take twice a day
+Carla Ramirez,10026,Amoxicillin,3,2,14,1,Pending Approval,Take at night
+Jessica Atkins,10014,Pantoprazole,19,2,5,1,Pending Approval,Take in morning
+Chelsea Lyons,10024,Pantoprazole,19,1,14,2,Pending Approval,Take twice a day
+Miss Holly Young,10015,Levothyroxine,16,1,13,2,Pending Approval,Take twice a day
+Tonya Miller,10008,Tramadol,20,1,8,3,Pending Approval,Take with food
+Katie Griffith,10017,Aspirin,1,2,7,1,Pending Approval,Take only at night
+Sarah Pope,10029,Levothyroxine,16,1,12,3,Pending Approval,Take with food
+Theresa Garza,10030,Amlodipine,12,2,9,3,Pending Approval,Take with food
+Tonya Miller,10008,Metoprolol,10,1,7,2,Pending Approval,Take twice a day
+Pamela Nguyen,10028,Omeprazole,15,2,7,2,Pending Approval,Take twice a day
+Katie Griffith,10017,Fluoxetine,14,1,4,2,Pending Approval,Take twice a day
+Leah Stokes,10013,Fluoxetine,14,1,7,2,Pending Approval,Take twice a day
+Alejandro Fisher,10019,Hydrochlorothiazide,8,2,6,3,Pending Approval,Take with food
+Theresa Garza,10030,Hydrochlorothiazide,8,1,13,1,Pending Approval,Take only at night
+Megan Barrett,10001,Hydrochlorothiazide,8,2,7,2,Pending Approval,Take twice a day
+Carla Ramirez,10026,Omeprazole,15,2,6,3,Pending Approval,Take with food
+Tonya Miller,10008,Pantoprazole,19,2,5,1,Pending Approval,Take only at night
+Vanessa Castillo,10009,Fluoxetine,14,2,9,2,Pending Approval,Take twice a day
+Vanessa Castillo,10009,Aspirin,1,1,7,3,Pending Approval,Take with food
+Megan Barrett,10001,Hydrochlorothiazide,8,2,6,3,Pending Approval,Take with food
+Stephen Parsons,10012,Amlodipine,12,2,12,2,Pending Approval,Take twice a day
+Jeremy Cooley,10023,Alprazolam,7,1,6,1,Pending Approval,Take only at night

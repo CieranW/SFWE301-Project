@@ -6,8 +6,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
+//import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class PrescriptionService {
@@ -95,7 +96,6 @@ public class PrescriptionService {
     public boolean readNewPrescription(Prescription prescription) {
         if (checkPrescriptionFields(prescription)) {
             addNewPresctiption(new Prescription(
-                    prescription.getPrescriptionId(),
                     prescription.getMedicationName(),
                     prescription.getMedicationId(),
                     prescription.getPatientName(),
@@ -112,11 +112,25 @@ public class PrescriptionService {
     }
 
     // Check that all fields are filled (8.3.3)
-    public boolean checkPrescriptionFields(Prescription prescription) {
-        return prescription.getPrescriptionId() != 0
-                && prescription.getPatientId() != 0
-                && prescription.getDosage() != 0
-                && prescription.getNotes() != null;
+    public static boolean checkPrescriptionFields(Prescription prescription) {
+        // Check if all fields of the prescription are filled
+        if (prescription.getMedicationName().isEmpty() ||
+                prescription.getPatientName().isEmpty() ||
+                prescription.getStatus().isEmpty() ||
+                prescription.getNotes().isEmpty()) {
+            return false; // Some fields are missing
+        }
+
+        // Add any other validation logic (e.g., checking for valid numbers)
+        if (prescription.getMedicationId() <= 0 ||
+                prescription.getPatientId() <= 0 ||
+                prescription.getDosage() <= 0 ||
+                prescription.getNumDays() <= 0 ||
+                prescription.getDailyIntake() <= 0) {
+            return false; // Invalid data
+        }
+
+        return true; // All fields are filled and valid
     }
 
     // Checks for medication interactions (8.3.5)
@@ -264,7 +278,7 @@ public class PrescriptionService {
     public boolean checkDuplicate(int patientId, int prescriptionId, int medicationId) {
         for (Prescription currentPrescription : prescriptionList) {
             if (currentPrescription.getPatientId() == patientId
-                    && currentPrescription.getMedicationId() == medicationId || currentPrescription.getPrescriptionId() == prescriptionId) {
+                    && currentPrescription.getMedicationId() == medicationId) {
                 return true;
             }
         }
