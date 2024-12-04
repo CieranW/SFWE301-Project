@@ -172,7 +172,7 @@ public class PrescriptionService {
                 // Assume the CSV format is: MedicationID,CurrentInventory
                 String[] parts = line.split(",");
                 int id = Integer.parseInt(parts[0].trim());
-                int currentInventory = Integer.parseInt(parts[1].trim());
+                int currentInventory = Integer.parseInt(parts[2].trim());
                 
                 if (id == medicationId) {
                     // Calculate the total medication required
@@ -189,44 +189,36 @@ public class PrescriptionService {
     }
 
     // Check expiration date (8.3.9)
-    public boolean checkExpiration(int medicationId, File medicineListFile, int patientId, Prescription prescription) {
+    public boolean checkExpiration(File invetoryFile, int medicationId, int numDays) {
         // Compares current date with expiration date
         // Could also calculate the number of days left until expiration or use the number of days needed to take the medication as a reference
         // Returns true if the medication is not expired, false otherwise
-        try (BufferedReader br = new BufferedReader(new FileReader(medicineListFile))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(inventoryFile))) {
             String line;
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                if (values.length == 14) {
-                    int medId = Integer.parseInt(values[1]);
-                    String expirationDate = values[10];
+            while ((line = reader.readLine()) != null) {
+                // Assume the CSV format is: MedicationID,ExpirationDate (YYYY-MM-DD)
+                String[] parts = line.split(",");
+                int id = Integer.parseInt(parts[0].trim());
+                String expirationDateStr = parts[5].trim();
+                
+                if (id == medicationId) {
+                    // Parse the expiration date
+                    LocalDate expirationDate = LocalDate.parse(expirationDateStr, DateTimeFormatter.ISO_LOCAL_DATE);
 
-                    if (medId == medicationId && patientId == prescription.getPatientId()) {
-                        // Compare expiration date with current date
-                        // If expiration date is greater than current date, return true
-                        // Otherwise, return false
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                        LocalDate currentDate = LocalDate.now();
-                        LocalDate expDate = LocalDate.parse(expirationDate, formatter);
+                    // Get the current date
+                    LocalDate currentDate = LocalDate.now();
 
-                        // Assuming the number of days the medicine needs to be taken for is provided
-                        int daysToTakeMedicine = 30; // Example value
+                    // Calculate the last valid date for the prescription
+                    LocalDate prescriptionEndDate = currentDate.plusDays(numDays);
 
-                        if (expDate.isAfter(currentDate)) {
-                            long daysUntilExpiration = ChronoUnit.DAYS.between(currentDate, expDate);
-                            if (daysUntilExpiration >= daysToTakeMedicine) {
-                                return true;
-                            }
-                        }
-                        return false;
-
-                    }
+                    // Check if the medication will remain valid for the entire duration
+                    return !currentDate.isAfter(expirationDate) && !prescriptionEndDate.isAfter(expirationDate);
                 }
             }
-        } catch (IOException e) {
-            System.err.println("Error reading file: " + e.getMessage());
+        } catch (IOException | NumberFormatException e) {
+            e.printStackTrace();
         }
-        return false;
+        return false; // Return false if medication ID not found or error occurs
     }
 
     // Collect all prescription history of a patient (8.3.10)
