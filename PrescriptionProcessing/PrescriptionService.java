@@ -102,6 +102,7 @@ public class PrescriptionService {
                     prescription.getPatientId(),
                     prescription.getDosage(),
                     prescription.getNumDays(),
+                    prescription.getDailyIntake(),
                     "Pending Approval",
                     prescription.getNotes()));
 

@@ -9,10 +9,11 @@ public class Prescription {
     private int patientId;
     private int dosage;
     private int numDays;
+    private int dailyIntake;
     private String status;
     private String notes;
 
-    public Prescription(int prescriptionId, String medicationName, int medicationId, String patientName, int patientId, int dosage, int numDays, String status, String notes) {
+    public Prescription(int prescriptionId, String medicationName, int medicationId, String patientName, int patientId, int dosage, int numDays, int dailyIntake, String status, String notes) {
         this.prescriptionId = prescriptionId;
         this.medicationName = medicationName;
         this.medicationId = medicationId;
@@ -20,6 +21,7 @@ public class Prescription {
         this.patientId = patientId;
         this.dosage = dosage;
         this.numDays = numDays;
+        this.dailyIntake = dailyIntake;
         this.status = status;
         this.notes = notes;
     }
@@ -80,6 +82,14 @@ public class Prescription {
         this.numDays = numDays;
     }
 
+    public int getDailyIntake() {
+        return dailyIntake;
+    }
+
+    public void setDailyIntake(int dailyIntake) {
+        this.dailyIntake = dailyIntake;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -94,6 +104,21 @@ public class Prescription {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    @Override
+    public String toString() {
+        return "Prescription{" +
+               "prescriptionId=" + prescriptionId +
+               ", patientName='" + patientName + '\'' +
+               ", patientId=" + patientId +
+               ", medicationName='" + medicationName + '\'' +
+               ", medicationId=" + medicationId +
+               ", dosage='" + dosage + '\'' +
+               ", daysToTake=" + numDays +
+               ", notes='" + notes + '\'' +
+               ", status='" + status + '\'' +
+               '}';
     }
 
 }
