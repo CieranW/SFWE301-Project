@@ -6,8 +6,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-//import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,6 +23,7 @@ public class PrescriptionService {
 
         try (BufferedReader br = new BufferedReader(new FileReader(medicineListFile))) {
             String line;
+            br.readLine(); // Skip header
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
                 if (values.length == 8) {
@@ -45,22 +46,27 @@ public class PrescriptionService {
         return interactionCount;
     }
 
-    public int readAllergyInteractionFile(File medicineListFile, List<String> allergies, int medicationId) {
+    public int readAllergyInteractionFile(List<String> allergies, int medicationId) {
         // Read csv file. Columns are Allergy, AllergyID, Medication, MedicationID
         // Return number of interactions found
         int interactionCount = 0;
+        String line;
 
         try (BufferedReader br = new BufferedReader(new FileReader(medicineListFile))) {
-            String line;
+            String header = br.readLine();
+            // System.out.println("Skipped header: " + header);
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                if (values.length == 8) {
-                    String allergy = values[2];
-                    int allergyId = Integer.parseInt(values[3]);
+                if (values.length == 9) {
+                    int medicineId = Integer.parseInt(values[1]);
+                    String[] allergyArray = values[2].split(";");
+                    List<String> allergyList = Arrays.asList(allergyArray);
 
-                    if (allergyId == medicationId) {
-                        if (allergies.contains(allergy)) {
-                            interactionCount++;
+                    if (medicineId == medicationId) {
+                        for (String allergyItem : allergyList) {
+                            if (allergies.contains(allergyItem)) {
+                                interactionCount++;
+                            }
                         }
                     }
                 }
@@ -149,17 +155,16 @@ public class PrescriptionService {
     }
 
     // Check allergies of patient (8.3.6)
-    public boolean checkAllergies(List<String> allergies, int medicationId, File allergiesFile) {
+    public void checkAllergies(List<String> allergies, int medicationId) {
+        System.out.println("Checking allergies for medication ID: " + medicationId);
         // Read allergies file and compare both patient allergies and medication allergies
-        int allgeryCount = readAllergyInteractionFile(medicineListFile, allergies, medicationId);
+        int allgeryCount = readAllergyInteractionFile(allergies, medicationId);
 
         // If the count is greater than 0, interactions are found
         if (allgeryCount > 0) {
-            System.out.println("Interaction found: " + allgeryCount);
-            return true;
+            System.out.println("Allergy found: " + allgeryCount);
         } else {
-            System.out.println("No interactions found.");
-            return false;
+            System.out.println("No allergies found.");
         }
     }
 
@@ -176,7 +181,7 @@ public class PrescriptionService {
     }
 
     // Check that there is enough inventory (8.3.9)
-    public boolean checkInventory(File medicineListFile, int medicationId, int dosage, int numDays) {
+    public boolean checkInventory(int medicationId, int dosage, int numDays) {
         // Access inventory stock amount
         // Calculate total mediciation patient needs
         // Ensure total number is less than inventory stock
@@ -203,7 +208,7 @@ public class PrescriptionService {
     }
 
     // Check expiration date (8.3.9)
-    public boolean checkExpiration(File medicineListFile, int medicationId, int numDays) {
+    public boolean checkExpiration(int medicationId, int numDays) {
         // Compares current date with expiration date
         // Could also calculate the number of days left until expiration or use the number of days needed to take the medication as a reference
         // Returns true if the medication is not expired, false otherwise
@@ -253,7 +258,7 @@ public class PrescriptionService {
     }
 
     // Check for controlled substances (8.3.12)
-    public boolean checkControlledSubstance(int medicationId, File medicineListFile) {
+    public boolean checkControlledSubstance(int medicationId) {
         // Read the medicine list file and check if the medication is a controlled substance
         try (BufferedReader br = new BufferedReader(new FileReader(medicineListFile))) {
             String line;
@@ -279,9 +284,11 @@ public class PrescriptionService {
         for (Prescription currentPrescription : prescriptionList) {
             if (currentPrescription.getPatientId() == patientId
                     && currentPrescription.getMedicationId() == medicationId) {
+                System.out.println("Duplicate prescription found: " + currentPrescription);
                 return true;
             }
         }
+        System.out.println("No duplicate prescriptions found.");
         return false;
     }
 

@@ -1,14 +1,15 @@
+import Patient.Patient;
+import PrescriptionProcessing.Prescription;
+import PrescriptionProcessing.PrescriptionTest;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import Patient.Patient;
-import PrescriptionProcessing.Prescription;
-import PrescriptionProcessing.PrescriptionTest;
 
 public class Test {
     public static void main(String[] args) {
@@ -40,6 +41,7 @@ public class Test {
                     data[7],                   // Status
                     data[8]                    // notes
                     );
+                // Set the prescription ID and calculate the new ID
                 newPrescription.setPrescriptionId(prescriptionId);
                 prescriptionId = newPrescription.getPrescriptionId();
 
@@ -95,8 +97,8 @@ public class Test {
         }
 
         // Test 1 - Manually Enter Prescription Details 
-        // String newPrescriptionAdded = PrescriptionTest.testEnterPrescription();
-        // System.out.println(newPrescriptionAdded);
+        String newPrescriptionAdded = PrescriptionTest.testEnterPrescription(prescriptions, prescriptionId, patients);
+        System.out.println(newPrescriptionAdded);
 
         // Test 2 - Accept and Validate Electronic Prescriptions
         // boolean readCSV = PrescriptionTest.acceptEPrescription();
@@ -107,8 +109,40 @@ public class Test {
         // }
 
         // Test 3 - Conflicting Information
+        // Pass patient, prescription and medication lists to the method to check for conflicts 
         
-        
+        // Test 4 - 
+
+        // Output to a new csv file, one for prescriptions
+        String outputPrescriptionCsvFile = "updated_prescriptions.csv";
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(outputPrescriptionCsvFile))) {
+            // Write the header row
+            bw.write("Patient Name,Patient ID,Medication Name,Medication ID,Dosage,Number of Days,Daily Intake,Status,Notes,Prescription ID");
+            bw.newLine();
+
+            // Write each prescription to the file
+            for (Prescription prescription : prescriptions) {
+            bw.write(String.join(",",
+                String.valueOf(prescription.getPrescriptionId()),
+                prescription.getPatientName(),
+                String.valueOf(prescription.getPatientId()),
+                prescription.getMedicationName(),
+                String.valueOf(prescription.getMedicationId()),
+                String.valueOf(prescription.getDosage()),
+                String.valueOf(prescription.getNumDays()),
+                String.valueOf(prescription.getDailyIntake()),
+                prescription.getStatus(),
+                prescription.getNotes()
+            ));
+            bw.newLine();
+            }
+
+            System.out.println("Updated prescriptions have been written to " + outputPrescriptionCsvFile);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

@@ -30,7 +30,7 @@ public class Prescription {
     }
 
     public void setPrescriptionId(int prescriptionId) {
-        this.prescriptionId = calculatePrescriptionID(prescriptionId);
+        this.prescriptionId = updatePrescriptionID(prescriptionId);
     }
 
     public String getMedicationName() {
@@ -120,7 +120,7 @@ public class Prescription {
                '}';
     }
 
-    public int calculatePrescriptionID(int prescriptionID) {
+    public int updatePrescriptionID(int prescriptionID) {
         prescriptionID += 1;
         return prescriptionID;
     }
