@@ -168,7 +168,7 @@ public class PrescriptionTest {
                 prescriptionService.checkAllergies(patient.getAllergies(), medicationId);
                 
                 // Checks for duplicate prescriptions
-                prescriptionService.checkDuplicate(patientId, prescriptionId, medicationId);
+                prescriptionService.checkDuplicate(patientId, medicationId, prescriptions);
 
                 // Checks for sufficient inventory
                 prescriptionService.checkInventory(medicationId, dosage, numDays);

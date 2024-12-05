@@ -86,7 +86,7 @@ public class PrescriptionService {
             return false;
         }
 
-        if (checkDuplicate(prescription.getPatientId(), prescription.getPrescriptionId(), prescription.getMedicationId())) {
+        if (checkDuplicate(prescription.getPatientId(), prescription.getMedicationId(), prescriptionList)) {
             System.out.println("Error: Duplicate prescription.");
             return false;
         }
@@ -187,6 +187,7 @@ public class PrescriptionService {
         // Ensure total number is less than inventory stock
         try (BufferedReader reader = new BufferedReader(new FileReader(medicineListFile))) {
             String line;
+            reader.readLine(); // Skip header
             while ((line = reader.readLine()) != null) {
                 // Assume the CSV format is: MedicationID,CurrentInventory
                 String[] parts = line.split(",");
@@ -214,6 +215,7 @@ public class PrescriptionService {
         // Returns true if the medication is not expired, false otherwise
         try (BufferedReader reader = new BufferedReader(new FileReader(medicineListFile))) {
             String line;
+            reader.readLine(); // Skip header
             while ((line = reader.readLine()) != null) {
                 // Assume the CSV format is: MedicationID,ExpirationDate (YYYY-MM-DD)
                 String[] parts = line.split(",");
@@ -262,6 +264,7 @@ public class PrescriptionService {
         // Read the medicine list file and check if the medication is a controlled substance
         try (BufferedReader br = new BufferedReader(new FileReader(medicineListFile))) {
             String line;
+            br.readLine(); // Skip header
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
                 if (values.length == 14) {
@@ -280,10 +283,9 @@ public class PrescriptionService {
     }
 
     // Ensure no duplicate prescription (8.3.13)
-    public boolean checkDuplicate(int patientId, int prescriptionId, int medicationId) {
+    public boolean checkDuplicate(int patientId, int medicationId, List<Prescription> prescriptionList) {
         for (Prescription currentPrescription : prescriptionList) {
-            if (currentPrescription.getPatientId() == patientId
-                    && currentPrescription.getMedicationId() == medicationId) {
+            if (currentPrescription.getPatientId() == patientId && currentPrescription.getMedicationId() == medicationId) {
                 System.out.println("Duplicate prescription found: " + currentPrescription);
                 return true;
             }

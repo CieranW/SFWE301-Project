@@ -110,6 +110,7 @@ public class Test {
 
         // Test 3 - Conflicting Information
         // Pass patient, prescription and medication lists to the method to check for conflicts 
+        // Test 3 is called in Test 1
         
         // Test 4 - 
 
