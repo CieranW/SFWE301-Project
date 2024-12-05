@@ -162,7 +162,6 @@ public class PrescriptionService {
 
     // Check allergies of patient (8.3.6)
     public void checkAllergies(List<String> allergies, int medicationId) {
-        System.out.println("Checking allergies for medication ID: " + medicationId);
         // Read allergies file and compare both patient allergies and medication allergies
         int allgeryCount = readAllergyInteractionFile(allergies, medicationId);
 
@@ -191,7 +190,6 @@ public class PrescriptionService {
         // Access inventory stock amount
         // Calculate total mediciation patient needs
         // Ensure total number is less than inventory stock
-        System.out.println("Checking inventory for medication ID: " + medicationId);
         try (BufferedReader reader = new BufferedReader(new FileReader(medicineListFile))) {
             String line;
             reader.readLine(); // Skip header

@@ -181,7 +181,10 @@ public class PrescriptionTest {
                 prescriptionService.checkMedicationInteractions(medicationId, patient.getCurrentMedications());
 
                 // Checks for prescription expiration
-                prescriptionService.checkExpiration(medicationId, numDays);
+                boolean expiry = prescriptionService.checkExpiration(medicationId, numDays);
+                if (expiry) {
+                    System.out.println("Warning: Prescription will expire during the treatment period.");
+                }
 
                 // Checks for controlled substances
                 prescriptionService.checkControlledSubstance(medicationId);
