@@ -1,4 +1,3 @@
-MedicineID, MedicineName, Quantity, Price, Threshold, ExpirationDate, Controlled, Manufacturer, Allergens
 1,Aspirin,150,9.99,45,2024-12-31,false,Bayer Pharmaceuticals,lactose;gluten
 2,Lisinopril,90,24.99,30,2024-10-15,false,Merck & Co,soy;wheat
 3,Amoxicillin,200,15.50,75,2024-08-20,false,Pfizer Inc,penicillin;sulfa

@@ -1,4 +1,4 @@
-package Inventory;
+package InventoryControl;
 
 import java.io.BufferedReader;
 import java.io.IOException;

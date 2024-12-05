@@ -1,4 +1,4 @@
-package Inventory;
+package InventoryControl;
 
 import java.util.ArrayList;
 import java.util.List;
