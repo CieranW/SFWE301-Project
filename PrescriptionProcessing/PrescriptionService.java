@@ -225,17 +225,16 @@ public class PrescriptionService {
                 String expirationDateStr = parts[7].trim();
                 
                 if (id == medicationId) {
-                    // Parse the expiration date
+                    // Parse expiration date
                     LocalDate expirationDate = LocalDate.parse(expirationDateStr, DateTimeFormatter.ISO_LOCAL_DATE);
 
-                    // Get the current date
+                    // Get current date and prescription end date
                     LocalDate currentDate = LocalDate.now();
-
-                    // Calculate the last valid date for the prescription
                     LocalDate prescriptionEndDate = currentDate.plusDays(numDays);
 
-                    // Check if the medication will remain valid for the entire duration
-                    return !currentDate.isAfter(expirationDate) && !prescriptionEndDate.isAfter(expirationDate);
+                    // Check validity
+                    boolean isValid = !currentDate.isAfter(expirationDate) && !prescriptionEndDate.isAfter(expirationDate);
+                    return isValid;
                 }
             }
         } catch (IOException | NumberFormatException e) {
@@ -263,26 +262,41 @@ public class PrescriptionService {
 
     // Check for controlled substances (8.3.12)
     public boolean checkControlledSubstance(int medicationId) {
-        // Read the medicine list file and check if the medication is a controlled substance
-        try (BufferedReader br = new BufferedReader(new FileReader(medicineListFile))) {
-            String line;
-            br.readLine(); // Skip header
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                if (values.length == 14) {
-                    int medId = Integer.parseInt(values[1]);
-                    String controlledSubstance = values[9];
+    // Read the medicine list file and check if the medication is a controlled substance
 
-                    if (medId == medicationId) {
-                        return controlledSubstance.equalsIgnoreCase("Yes");
-                    }
-                }
+    try (BufferedReader br = new BufferedReader(new FileReader(medicineListFile))) {
+        String line;
+        br.readLine(); // Skip header
+
+        while ((line = br.readLine()) != null) {
+            String[] values = line.split(",");
+
+            // Validate row structure
+            if (values.length < 9) {
+                System.err.println("Skipping malformed row: " + Arrays.toString(values));
+                continue;
             }
-        } catch (IOException e) {
-            System.err.println("Error reading file: " + e.getMessage());
+
+            try {
+                int medId = Integer.parseInt(values[1].trim());
+                int controlledSubstance = Integer.parseInt(values[8].trim());
+
+                if (medId == medicationId) {
+                    return controlledSubstance == 1;
+                }
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid Medication ID in row: " + Arrays.toString(values));
+                continue;
+            }
         }
-        return false;
+    } catch (IOException e) {
+        System.err.println("Error reading file: " + e.getMessage());
+        e.printStackTrace();
     }
+
+    System.out.println("Medication ID " + medicationId + " not found.");
+    return false; // Default to false if medication ID is not found
+}
 
     // Ensure no duplicate prescription (8.3.13)
     public boolean checkDuplicate(int patientId, int medicationId, List<Prescription> prescriptionList) {

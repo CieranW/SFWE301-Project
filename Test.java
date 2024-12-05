@@ -112,7 +112,7 @@ public class Test {
         // Pass patient, prescription and medication lists to the method to check for conflicts 
         // Test 3 is called in Test 1
         
-        // Test 4 - 
+        // Test 4 - Updating Status of Prescriptions
 
         // Output to a new csv file, one for prescriptions
         String outputPrescriptionCsvFile = "updated_prescriptions.csv";

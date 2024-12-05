@@ -182,14 +182,29 @@ public class PrescriptionTest {
 
                 // Checks for prescription expiration
                 boolean expiry = prescriptionService.checkExpiration(medicationId, numDays);
-                if (expiry) {
+                if (!expiry) {
                     System.out.println("Warning: Prescription will expire during the treatment period.");
                 }
 
                 // Checks for controlled substances
-                prescriptionService.checkControlledSubstance(medicationId);
+                boolean controlled = prescriptionService.checkControlledSubstance(medicationId);
+                if (controlled) {
+                    System.out.println("Warning: Medication ID " + medicationId + " is a controlled substance.");
+                }
+            }       
+
+        }
+    }
+
+    // Test 4 (Updating Status of Prescriptions)
+    public static void updatePrescriptionStatus(List<Prescription> prescriptions) {
+        // Update the status of prescriptions
+        for (Prescription prescription : prescriptions) {
+            if (prescription.getStatus().equals("Pending")) {
+                prescription.setStatus("Inactive");
+            } else {
+                prescription.setStatus("Active");
             }
         }
-
     }
 }
