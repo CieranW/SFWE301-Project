@@ -1,0 +1,54 @@
+[2024-12-02 06:20:14] ItemID: 2 | Lisinopril | REORDER | From: 90 | To: 120 | By: SYSTEM
+[2024-12-02 06:20:14] ItemID: 4 | Metformin | REORDER | From: 100 | To: 120 | By: SYSTEM
+[2024-12-02 06:20:14] ItemID: 5 | Oxycodone | REORDER | From: 75 | To: 120 | By: SYSTEM
+[2024-12-02 06:20:14] ItemID: 6 | Sertraline | REORDER | From: 110 | To: 120 | By: SYSTEM
+[2024-12-02 06:20:14] ItemID: 7 | Alprazolam | REORDER | From: 80 | To: 120 | By: SYSTEM
+[2024-12-02 06:20:14] ItemID: 9 | Gabapentin | REORDER | From: 95 | To: 120 | By: SYSTEM
+[2024-12-02 06:20:14] ItemID: 11 | Prednisone | REORDER | From: 115 | To: 120 | By: SYSTEM
+[2024-12-02 06:20:14] ItemID: 12 | Amlodipine | REORDER | From: 85 | To: 120 | By: SYSTEM
+[2024-12-02 06:20:14] ItemID: 13 | Methylphenidate | REORDER | From: 70 | To: 120 | By: SYSTEM
+[2024-12-02 06:20:14] ItemID: 16 | Levothyroxine | REORDER | From: 105 | To: 120 | By: SYSTEM
+[2024-12-02 06:20:14] ItemID: 17 | Morphine | REORDER | From: 60 | To: 120 | By: SYSTEM
+[2024-12-02 06:20:14] ItemID: 20 | Tramadol | REORDER | From: 90 | To: 120 | By: SYSTEM
+[2024-12-02 06:20:14] ItemID: 23 | Warfarin | REORDER | From: 65 | To: 120 | By: SYSTEM
+[2024-12-02 06:20:14] ItemID: 24 | Venlafaxine | REORDER | From: 110 | To: 120 | By: SYSTEM
+[2024-12-02 06:20:14] ItemID: 25 | Fentanyl | REORDER | From: 50 | To: 120 | By: SYSTEM
+[2024-12-03 09:56:27] ItemID: 22 | Duloxetine | EXPIRY_REMOVAL | From: Quantity: 120, Expiry: 2024-11-05 | To: REMOVED | By: SYSTEM
+[2024-12-03 14:39:56] ItemID: 23 | Warfarin | EXPIRY_REMOVAL | From: Quantity: 95, Expiry: 2024-10-25 | To: REMOVED | By: SYSTEM
+[2024-12-03 14:40:58] ItemID: 2 | Lisinopril | REORDER | From: 90 | To: 120 | By: SYSTEM
+[2024-12-03 14:40:58] ItemID: 4 | Metformin | REORDER | From: 100 | To: 120 | By: SYSTEM
+[2024-12-03 14:40:58] ItemID: 5 | Oxycodone | REORDER | From: 75 | To: 120 | By: SYSTEM
+[2024-12-03 14:40:58] ItemID: 6 | Sertraline | REORDER | From: 110 | To: 120 | By: SYSTEM
+[2024-12-03 14:40:58] ItemID: 7 | Alprazolam | REORDER | From: 80 | To: 120 | By: SYSTEM
+[2024-12-03 14:40:58] ItemID: 9 | Gabapentin | REORDER | From: 95 | To: 120 | By: SYSTEM
+[2024-12-03 14:40:58] ItemID: 11 | Prednisone | REORDER | From: 115 | To: 120 | By: SYSTEM
+[2024-12-03 14:40:58] ItemID: 12 | Amlodipine | REORDER | From: 85 | To: 120 | By: SYSTEM
+[2024-12-03 14:40:58] ItemID: 13 | Methylphenidate | REORDER | From: 70 | To: 120 | By: SYSTEM
+[2024-12-03 14:40:58] ItemID: 16 | Levothyroxine | REORDER | From: 105 | To: 120 | By: SYSTEM
+[2024-12-03 14:40:58] ItemID: 17 | Morphine | REORDER | From: 60 | To: 120 | By: SYSTEM
+[2024-12-03 14:40:58] ItemID: 20 | Tramadol | REORDER | From: 90 | To: 120 | By: SYSTEM
+[2024-12-03 14:40:58] ItemID: 23 | Warfarin | REORDER | From: 0 | To: 120 | By: SYSTEM
+[2024-12-03 14:40:58] ItemID: 24 | Venlafaxine | REORDER | From: 110 | To: 120 | By: SYSTEM
+[2024-12-03 14:40:58] ItemID: 25 | Fentanyl | REORDER | From: 50 | To: 120 | By: SYSTEM
+[2024-12-03 20:11:01] ItemID: 23 | Warfarin | EXPIRY_REMOVAL | From: Quantity: 95, Expiry: 2024-10-25 | To: REMOVED | By: SYSTEM
+[2024-12-03 20:13:58] ItemID: 13 | Methylphenidate | EXPIRY_UPDATE | From: 2024-07-15 | To: 2025-01-23 | By: SYSTEM
+[2024-12-03 20:14:17] ItemID: 2 | Lisinopril | EXPIRY_REMOVAL | From: Quantity: 90, Expiry: 2024-10-15 | To: REMOVED | By: SYSTEM
+[2024-12-03 20:14:17] ItemID: 3 | Amoxicillin | EXPIRY_REMOVAL | From: Quantity: 200, Expiry: 2024-08-20 | To: REMOVED | By: SYSTEM
+[2024-12-03 20:14:17] ItemID: 4 | Metformin | EXPIRY_REMOVAL | From: Quantity: 100, Expiry: 2024-11-30 | To: REMOVED | By: SYSTEM
+[2024-12-03 20:14:17] ItemID: 5 | Oxycodone | EXPIRY_REMOVAL | From: Quantity: 75, Expiry: 2024-09-15 | To: REMOVED | By: SYSTEM
+[2024-12-03 20:14:17] ItemID: 6 | Sertraline | EXPIRY_REMOVAL | From: Quantity: 110, Expiry: 2024-07-25 | To: REMOVED | By: SYSTEM
+[2024-12-03 20:14:17] ItemID: 7 | Alprazolam | EXPIRY_REMOVAL | From: Quantity: 80, Expiry: 2024-06-30 | To: REMOVED | By: SYSTEM
+[2024-12-03 20:14:17] ItemID: 9 | Gabapentin | EXPIRY_REMOVAL | From: Quantity: 95, Expiry: 2024-11-01 | To: REMOVED | By: SYSTEM
+[2024-12-03 20:14:17] ItemID: 10 | Metoprolol | EXPIRY_REMOVAL | From: Quantity: 130, Expiry: 2024-10-20 | To: REMOVED | By: SYSTEM
+[2024-12-03 20:14:17] ItemID: 11 | Prednisone | EXPIRY_REMOVAL | From: Quantity: 115, Expiry: 2024-09-10 | To: REMOVED | By: SYSTEM
+[2024-12-03 20:14:17] ItemID: 12 | Amlodipine | EXPIRY_REMOVAL | From: Quantity: 85, Expiry: 2024-08-05 | To: REMOVED | By: SYSTEM
+[2024-12-03 20:14:17] ItemID: 15 | Omeprazole | EXPIRY_REMOVAL | From: Quantity: 190, Expiry: 2024-11-25 | To: REMOVED | By: SYSTEM
+[2024-12-03 20:14:17] ItemID: 16 | Levothyroxine | EXPIRY_REMOVAL | From: Quantity: 105, Expiry: 2024-10-30 | To: REMOVED | By: SYSTEM
+[2024-12-03 20:14:17] ItemID: 17 | Morphine | EXPIRY_REMOVAL | From: Quantity: 60, Expiry: 2024-09-20 | To: REMOVED | By: SYSTEM
+[2024-12-03 20:14:17] ItemID: 18 | Escitalopram | EXPIRY_REMOVAL | From: Quantity: 145, Expiry: 2024-08-15 | To: REMOVED | By: SYSTEM
+[2024-12-03 20:14:17] ItemID: 19 | Pantoprazole | EXPIRY_REMOVAL | From: Quantity: 170, Expiry: 2024-07-20 | To: REMOVED | By: SYSTEM
+[2024-12-03 20:14:17] ItemID: 20 | Tramadol | EXPIRY_REMOVAL | From: Quantity: 90, Expiry: 2024-06-25 | To: REMOVED | By: SYSTEM
+[2024-12-03 20:14:17] ItemID: 22 | Duloxetine | EXPIRY_REMOVAL | From: Quantity: 120, Expiry: 2024-11-05 | To: REMOVED | By: SYSTEM
+[2024-12-03 20:14:17] ItemID: 23 | Warfarin | EXPIRY_REMOVAL | From: Quantity: 95, Expiry: 2024-10-25 | To: REMOVED | By: SYSTEM
+[2024-12-03 20:14:17] ItemID: 24 | Venlafaxine | EXPIRY_REMOVAL | From: Quantity: 110, Expiry: 2024-09-30 | To: REMOVED | By: SYSTEM
+[2024-12-03 20:14:17] ItemID: 25 | Fentanyl | EXPIRY_REMOVAL | From: Quantity: 50, Expiry: 2024-08-25 | To: REMOVED | By: SYSTEM
