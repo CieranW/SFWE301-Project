@@ -9,7 +9,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 public class PrescriptionService {
@@ -174,15 +173,12 @@ public class PrescriptionService {
     }
 
     // track current status of prescription (8.3.8)
-    public String trackStatus(int prescriptionId, String status) {
+    public void updateStatus(List<Prescription> prescriptionList, int prescriptionId, String newStatus) {
         for (Prescription currentPrescription : prescriptionList) {
             if (currentPrescription.getPrescriptionId() == prescriptionId) {
-                currentPrescription.setStatus(status);
-                return status;
+                currentPrescription.setStatus(newStatus);
             }
         }
-
-        return null;
     }
 
     // Check that there is enough inventory (8.3.9)
@@ -244,15 +240,19 @@ public class PrescriptionService {
     }
 
     // Collect all prescription history of a patient (8.3.10)
-    public Prescription getPrescriptionHistory(int patientId, HashMap<Integer, Prescription> prescriptionMap) {
+    public List<Prescription> getPrescriptionHistory(int patientId, List<Prescription> prescriptionList) {
         // Uses patient ID to retrieve all prescriptions with matching patient ID from the prescription map
         // Puts all matches into a new prescription array, returns array
-        for (Prescription prescription : prescriptionMap.values()) {
+        List<Prescription> matchedPrescriptions = new ArrayList<>();
+
+        // Iterate over the prescription map to find matches
+        for (Prescription prescription : prescriptionList) {
             if (prescription.getPatientId() == patientId) {
-                return prescription;
+                matchedPrescriptions.add(prescription); // Add to the list
             }
         }
-        return null; // Return null if no matching prescription is found
+        // Return the list of matched prescriptions
+        return matchedPrescriptions;
     }
 
     // Notify patients (8.3.11)
@@ -311,14 +311,12 @@ public class PrescriptionService {
     }
 
     // Add notes to prescription (8.3.14)
-    public boolean addNotes(int prescriptionId, String notes) {
+    public void addNotes(List<Prescription> prescriptionList, int prescriptionId, String notes) {
         for (Prescription currentPrescription : prescriptionList) {
             if (currentPrescription.getPrescriptionId() == prescriptionId) {
                 currentPrescription.setNotes(notes);
-                return true;
             }
         }
-        return false;
     }
 
 }
