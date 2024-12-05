@@ -171,7 +171,11 @@ public class PrescriptionTest {
                 prescriptionService.checkDuplicate(patientId, medicationId, prescriptions);
 
                 // Checks for sufficient inventory
-                prescriptionService.checkInventory(medicationId, dosage, numDays);
+                boolean inventory = prescriptionService.checkInventory(medicationId, dosage);
+                if (!inventory) {
+                    System.out.println("Error: Insufficient inventory for medication ID: " + medicationId);
+                }
+                
 
                 // Checks for medication interactions
                 prescriptionService.checkMedicationInteractions(medicationId, patient.getCurrentMedications());

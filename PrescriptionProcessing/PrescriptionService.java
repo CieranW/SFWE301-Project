@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,19 +26,24 @@ public class PrescriptionService {
             String line;
             br.readLine(); // Skip header
             while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                if (values.length == 8) {
-                    String med1 = values[0];
-                    int med1Id = Integer.parseInt(values[1]);
-                    String med2 = values[4];
-                    int med2Id = Integer.parseInt(values[5]);
-
-                    if (med1Id == medicationId || med2Id == medicationId) {
-                        if (currentMedications.contains(med1) || currentMedications.contains(med2)) {
-                            interactionCount++;
-                        }
-                    }
+            String[] values = line.split(",");
+            if (values.length == 9) {
+                String med1 = values[0];
+                int med1Id = Integer.parseInt(values[1]);
+                String[] med2Array = values[4].split(";");
+                String[] med2IdArray = values[5].split(";");
+                List<String> med2List = Arrays.asList(med2Array);
+                List<Integer> med2IdList = new ArrayList<>();
+                for (String med2IdStr : med2IdArray) {
+                med2IdList.add(Integer.parseInt(med2IdStr));
                 }
+
+                if (med1Id == medicationId || med2IdList.contains(medicationId)) {
+                if (currentMedications.contains(med1) || !Collections.disjoint(currentMedications, med2List)) {
+                    interactionCount++;
+                }
+                }
+            }
             }
         } catch (IOException e) {
             System.err.println("Error reading file: " + e.getMessage());
@@ -181,10 +187,11 @@ public class PrescriptionService {
     }
 
     // Check that there is enough inventory (8.3.9)
-    public boolean checkInventory(int medicationId, int dosage, int numDays) {
+    public boolean checkInventory(int medicationId, int dosage) {
         // Access inventory stock amount
         // Calculate total mediciation patient needs
         // Ensure total number is less than inventory stock
+        System.out.println("Checking inventory for medication ID: " + medicationId);
         try (BufferedReader reader = new BufferedReader(new FileReader(medicineListFile))) {
             String line;
             reader.readLine(); // Skip header
@@ -195,11 +202,8 @@ public class PrescriptionService {
                 int currentInventory = Integer.parseInt(parts[6].trim());
                 
                 if (id == medicationId) {
-                    // Calculate the total medication required
-                    int totalMedicationRequired = dosage * numDays;
-
                     // Check if the inventory can cover the required medication
-                    return currentInventory >= totalMedicationRequired;
+                    return currentInventory >= dosage;
                 }
             }
         } catch (IOException | NumberFormatException e) {
