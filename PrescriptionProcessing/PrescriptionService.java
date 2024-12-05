@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 
 public class PrescriptionService {
@@ -25,19 +25,24 @@ public class PrescriptionService {
             String line;
             br.readLine(); // Skip header
             while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                if (values.length == 8) {
-                    String med1 = values[0];
-                    int med1Id = Integer.parseInt(values[1]);
-                    String med2 = values[4];
-                    int med2Id = Integer.parseInt(values[5]);
-
-                    if (med1Id == medicationId || med2Id == medicationId) {
-                        if (currentMedications.contains(med1) || currentMedications.contains(med2)) {
-                            interactionCount++;
-                        }
-                    }
+            String[] values = line.split(",");
+            if (values.length == 9) {
+                String med1 = values[0];
+                int med1Id = Integer.parseInt(values[1]);
+                String[] med2Array = values[4].split(";");
+                String[] med2IdArray = values[5].split(";");
+                List<String> med2List = Arrays.asList(med2Array);
+                List<Integer> med2IdList = new ArrayList<>();
+                for (String med2IdStr : med2IdArray) {
+                med2IdList.add(Integer.parseInt(med2IdStr));
                 }
+
+                if (med1Id == medicationId || med2IdList.contains(medicationId)) {
+                if (currentMedications.contains(med1) || !Collections.disjoint(currentMedications, med2List)) {
+                    interactionCount++;
+                }
+                }
+            }
             }
         } catch (IOException e) {
             System.err.println("Error reading file: " + e.getMessage());
@@ -156,7 +161,6 @@ public class PrescriptionService {
 
     // Check allergies of patient (8.3.6)
     public void checkAllergies(List<String> allergies, int medicationId) {
-        System.out.println("Checking allergies for medication ID: " + medicationId);
         // Read allergies file and compare both patient allergies and medication allergies
         int allgeryCount = readAllergyInteractionFile(allergies, medicationId);
 
@@ -169,19 +173,16 @@ public class PrescriptionService {
     }
 
     // track current status of prescription (8.3.8)
-    public String trackStatus(int prescriptionId, String status) {
+    public void updateStatus(List<Prescription> prescriptionList, int prescriptionId, String newStatus) {
         for (Prescription currentPrescription : prescriptionList) {
             if (currentPrescription.getPrescriptionId() == prescriptionId) {
-                currentPrescription.setStatus(status);
-                return status;
+                currentPrescription.setStatus(newStatus);
             }
         }
-
-        return null;
     }
 
     // Check that there is enough inventory (8.3.9)
-    public boolean checkInventory(int medicationId, int dosage, int numDays) {
+    public boolean checkInventory(int medicationId, int dosage) {
         // Access inventory stock amount
         // Calculate total mediciation patient needs
         // Ensure total number is less than inventory stock
@@ -195,11 +196,8 @@ public class PrescriptionService {
                 int currentInventory = Integer.parseInt(parts[6].trim());
                 
                 if (id == medicationId) {
-                    // Calculate the total medication required
-                    int totalMedicationRequired = dosage * numDays;
-
                     // Check if the inventory can cover the required medication
-                    return currentInventory >= totalMedicationRequired;
+                    return currentInventory >= dosage;
                 }
             }
         } catch (IOException | NumberFormatException e) {
@@ -223,17 +221,16 @@ public class PrescriptionService {
                 String expirationDateStr = parts[7].trim();
                 
                 if (id == medicationId) {
-                    // Parse the expiration date
+                    // Parse expiration date
                     LocalDate expirationDate = LocalDate.parse(expirationDateStr, DateTimeFormatter.ISO_LOCAL_DATE);
 
-                    // Get the current date
+                    // Get current date and prescription end date
                     LocalDate currentDate = LocalDate.now();
-
-                    // Calculate the last valid date for the prescription
                     LocalDate prescriptionEndDate = currentDate.plusDays(numDays);
 
-                    // Check if the medication will remain valid for the entire duration
-                    return !currentDate.isAfter(expirationDate) && !prescriptionEndDate.isAfter(expirationDate);
+                    // Check validity
+                    boolean isValid = !currentDate.isAfter(expirationDate) && !prescriptionEndDate.isAfter(expirationDate);
+                    return isValid;
                 }
             }
         } catch (IOException | NumberFormatException e) {
@@ -243,15 +240,19 @@ public class PrescriptionService {
     }
 
     // Collect all prescription history of a patient (8.3.10)
-    public Prescription getPrescriptionHistory(int patientId, HashMap<Integer, Prescription> prescriptionMap) {
+    public List<Prescription> getPrescriptionHistory(int patientId, List<Prescription> prescriptionList) {
         // Uses patient ID to retrieve all prescriptions with matching patient ID from the prescription map
         // Puts all matches into a new prescription array, returns array
-        for (Prescription prescription : prescriptionMap.values()) {
+        List<Prescription> matchedPrescriptions = new ArrayList<>();
+
+        // Iterate over the prescription map to find matches
+        for (Prescription prescription : prescriptionList) {
             if (prescription.getPatientId() == patientId) {
-                return prescription;
+                matchedPrescriptions.add(prescription); // Add to the list
             }
         }
-        return null; // Return null if no matching prescription is found
+        // Return the list of matched prescriptions
+        return matchedPrescriptions;
     }
 
     // Notify patients (8.3.11)
@@ -261,26 +262,41 @@ public class PrescriptionService {
 
     // Check for controlled substances (8.3.12)
     public boolean checkControlledSubstance(int medicationId) {
-        // Read the medicine list file and check if the medication is a controlled substance
-        try (BufferedReader br = new BufferedReader(new FileReader(medicineListFile))) {
-            String line;
-            br.readLine(); // Skip header
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                if (values.length == 14) {
-                    int medId = Integer.parseInt(values[1]);
-                    String controlledSubstance = values[9];
+    // Read the medicine list file and check if the medication is a controlled substance
 
-                    if (medId == medicationId) {
-                        return controlledSubstance.equalsIgnoreCase("Yes");
-                    }
-                }
+    try (BufferedReader br = new BufferedReader(new FileReader(medicineListFile))) {
+        String line;
+        br.readLine(); // Skip header
+
+        while ((line = br.readLine()) != null) {
+            String[] values = line.split(",");
+
+            // Validate row structure
+            if (values.length < 9) {
+                System.err.println("Skipping malformed row: " + Arrays.toString(values));
+                continue;
             }
-        } catch (IOException e) {
-            System.err.println("Error reading file: " + e.getMessage());
+
+            try {
+                int medId = Integer.parseInt(values[1].trim());
+                int controlledSubstance = Integer.parseInt(values[8].trim());
+
+                if (medId == medicationId) {
+                    return controlledSubstance == 1;
+                }
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid Medication ID in row: " + Arrays.toString(values));
+                continue;
+            }
         }
-        return false;
+    } catch (IOException e) {
+        System.err.println("Error reading file: " + e.getMessage());
+        e.printStackTrace();
     }
+
+    System.out.println("Medication ID " + medicationId + " not found.");
+    return false; // Default to false if medication ID is not found
+}
 
     // Ensure no duplicate prescription (8.3.13)
     public boolean checkDuplicate(int patientId, int medicationId, List<Prescription> prescriptionList) {
@@ -295,14 +311,12 @@ public class PrescriptionService {
     }
 
     // Add notes to prescription (8.3.14)
-    public boolean addNotes(int prescriptionId, String notes) {
+    public void addNotes(List<Prescription> prescriptionList, int prescriptionId, String notes) {
         for (Prescription currentPrescription : prescriptionList) {
             if (currentPrescription.getPrescriptionId() == prescriptionId) {
                 currentPrescription.setNotes(notes);
-                return true;
             }
         }
-        return false;
     }
 
 }

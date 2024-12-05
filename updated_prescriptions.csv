@@ -4,7 +4,7 @@ Patient Name,Patient ID,Medication Name,Medication ID,Dosage,Number of Days,Dail
 20003,Jessica Atkins,10014,Pantoprazole,19,2,5,1,Pending Approval,Take in morning
 20004,Chelsea Lyons,10024,Pantoprazole,19,1,14,2,Pending Approval,Take twice a day
 20005,Miss Holly Young,10015,Levothyroxine,16,1,13,2,Pending Approval,Take twice a day
-20006,Tonya Miller,10008,Tramadol,20,1,8,3,Pending Approval,Take with food
+20006,Tonya Miller,10008,Tramadol,20,1,8,3,Pending Approval,Take before food
 20007,Katie Griffith,10017,Aspirin,1,2,7,1,Pending Approval,Take only at night
 20008,Sarah Pope,10029,Levothyroxine,16,1,12,3,Pending Approval,Take with food
 20009,Theresa Garza,10030,Amlodipine,12,2,9,3,Pending Approval,Take with food
@@ -22,4 +22,3 @@ Patient Name,Patient ID,Medication Name,Medication ID,Dosage,Number of Days,Dail
 20021,Megan Barrett,10001,Hydrochlorothiazide,8,2,6,3,Pending Approval,Take with food
 20022,Stephen Parsons,10012,Amlodipine,12,2,12,2,Pending Approval,Take twice a day
 20023,Jeremy Cooley,10023,Alprazolam,7,1,6,1,Pending Approval,Take only at night
-20024,me,10009,blue,14,34,34,34,None,None

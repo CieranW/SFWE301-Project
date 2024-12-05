@@ -171,18 +171,109 @@ public class PrescriptionTest {
                 prescriptionService.checkDuplicate(patientId, medicationId, prescriptions);
 
                 // Checks for sufficient inventory
-                prescriptionService.checkInventory(medicationId, dosage, numDays);
+                boolean inventory = prescriptionService.checkInventory(medicationId, dosage);
+                if (!inventory) {
+                    System.out.println("Error: Insufficient inventory for medication ID: " + medicationId);
+                }
+                
 
                 // Checks for medication interactions
                 prescriptionService.checkMedicationInteractions(medicationId, patient.getCurrentMedications());
 
                 // Checks for prescription expiration
-                prescriptionService.checkExpiration(medicationId, numDays);
+                boolean expiry = prescriptionService.checkExpiration(medicationId, numDays);
+                if (!expiry) {
+                    System.out.println("Warning: Prescription will expire during the treatment period.");
+                }
 
                 // Checks for controlled substances
-                prescriptionService.checkControlledSubstance(medicationId);
+                boolean controlled = prescriptionService.checkControlledSubstance(medicationId);
+                if (controlled) {
+                    System.out.println("Warning: Medication ID " + medicationId + " is a controlled substance.");
+                }
+            }       
+
+        }
+    }
+
+    // Test 4 (Updating Status of Prescriptions)
+    public static void updatePrescriptionStatus(List<Prescription> prescriptions) {
+        // Update the status of prescriptions
+        Scanner scanner = new Scanner(System.in);
+        PrescriptionService prescriptionService = new PrescriptionService();
+
+        System.out.println("Enter the prescription ID to update the status: ");
+        int prescriptionId = scanner.nextInt();
+        scanner.nextLine();
+
+        // Print current prescription ID and status
+        for (Prescription prescription : prescriptions) {
+            if (prescription.getPrescriptionId() == prescriptionId) {
+                System.out.println("Current status of prescription ID " + prescriptionId + " is: " + prescription.getStatus());
             }
         }
 
+        System.out.println("Enter the new status: ");
+        String newStatus = scanner.nextLine();
+
+        prescriptionService.updateStatus(prescriptions, prescriptionId, newStatus);
+
+        System.out.println("Status updated successfully.");
+        // Print updated status and prescription ID
+        for (Prescription prescription : prescriptions) {
+            if (prescription.getPrescriptionId() == prescriptionId) {
+                System.out.println("Updated status of prescription ID " + prescriptionId + " is: " + prescription.getStatus());
+            }
+        }
+    }
+
+    // Test 5 (Record all patient prescriptions)
+    public static void recordAllPatientPrescriptions(List<Prescription> prescriptions) {
+        // Record all patient prescriptions
+        Scanner scanner = new Scanner(System.in);
+        PrescriptionService prescriptionService = new PrescriptionService();
+
+        System.out.println("Enter the patient ID to get prescription history: ");
+        int patientID = scanner.nextInt();
+        scanner.nextLine();
+
+        List<Prescription> prescriptHistory = prescriptionService.getPrescriptionHistory(patientID, prescriptions);
+
+        // Print all prescriptions for the patient
+        System.out.println("Prescription history for patient ID " + patientID + ":");
+        for (Prescription prescription : prescriptHistory) {
+            System.out.println(prescription);
+        }
+    }
+
+    // Test 6 (Add notes to prescriptions)
+    public static void addNotesToPrescriptions(List<Prescription> prescriptions) {
+        // Add notes to prescriptions
+        Scanner scanner = new Scanner(System.in);
+        PrescriptionService prescriptionService = new PrescriptionService();
+
+        System.out.println("Enter the prescription ID to add notes: ");
+        int prescriptionID = scanner.nextInt();
+        scanner.nextLine();
+
+        // Print current prescription ID and notes
+        for (Prescription prescription : prescriptions) {
+            if (prescription.getPrescriptionId() == prescriptionID) {
+                System.out.println("Current notes for prescription ID " + prescriptionID + ": " + prescription.getNotes());
+            }
+        }
+
+        System.out.println("Enter the notes: ");
+        String notes = scanner.nextLine();
+
+        prescriptionService.addNotes(prescriptions, prescriptionID, notes);
+
+        System.out.println("Notes added successfully.");
+        // Print updated notes and prescription ID
+        for (Prescription prescription : prescriptions) {
+            if (prescription.getPrescriptionId() == prescriptionID) {
+                System.out.println("Updated notes for prescription ID " + prescriptionID + ": " + prescription.getNotes());
+            }
+        }
     }
 }

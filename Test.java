@@ -97,8 +97,8 @@ public class Test {
         }
 
         // Test 1 - Manually Enter Prescription Details 
-        String newPrescriptionAdded = PrescriptionTest.testEnterPrescription(prescriptions, prescriptionId, patients);
-        System.out.println(newPrescriptionAdded);
+        // String newPrescriptionAdded = PrescriptionTest.testEnterPrescription(prescriptions, prescriptionId, patients);
+        // System.out.println(newPrescriptionAdded);
 
         // Test 2 - Accept and Validate Electronic Prescriptions
         // boolean readCSV = PrescriptionTest.acceptEPrescription();
@@ -112,7 +112,17 @@ public class Test {
         // Pass patient, prescription and medication lists to the method to check for conflicts 
         // Test 3 is called in Test 1
         
-        // Test 4 - 
+        // Test 4 - Updating Status of Prescriptions
+        // Pass the list of prescriptions to the method to update the status
+        // PrescriptionTest.updatePrescriptionStatus(prescriptions);
+
+        // Test 5 - Record all patient prescriptions
+        // Pass the list of patients and prescriptions to the method to record all patient prescriptions
+        // PrescriptionTest.recordAllPatientPrescriptions(prescriptions);
+
+        // Test 6 - Add notes to prescriptions
+        // Pass the list of prescriptions to the method to add notes to prescriptions
+        PrescriptionTest.addNotesToPrescriptions(prescriptions);
 
         // Output to a new csv file, one for prescriptions
         String outputPrescriptionCsvFile = "updated_prescriptions.csv";
