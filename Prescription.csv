@@ -1,4 +1,5 @@
-Patient Name,Patient ID,Medication Name,Medication ID,Dosage,Number of Days to Take Medication,Daily Intake,Status,Notes
+Patient Name,Patient ID,Medication Name,Medication ID,Dosage,Number of Days to Take Medication,
+Daily Intake,Status,Notes
 Tonya Miller,10008,Alprazolam,7,1,10,2,Pending Approval,Take twice a day
 Carla Ramirez,10026,Amoxicillin,3,2,14,1,Pending Approval,Take at night
 Jessica Atkins,10014,Pantoprazole,19,2,5,1,Pending Approval,Take in morning
@@ -22,3 +23,5 @@ Vanessa Castillo,10009,Aspirin,1,1,7,3,Pending Approval,Take with food
 Megan Barrett,10001,Hydrochlorothiazide,8,2,6,3,Pending Approval,Take with food
 Stephen Parsons,10012,Amlodipine,12,2,12,2,Pending Approval,Take twice a day
 Jeremy Cooley,10023,Alprazolam,7,1,6,1,Pending Approval,Take only at night
+
+

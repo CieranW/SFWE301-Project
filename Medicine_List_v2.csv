@@ -1,4 +1,5 @@
-medicine name,MedicineID,associated allergies to medicine,associated allergies ID,medicines that it has bad interactions with,interaction medications to avoid ID, quantity, expirationDate, controlled
+medicine name,MedicineID,Associate Allergies,Allergies ID,Medicine Interactions,
+Medicine Interactions ID,quantity,expirationDate,controlled
 Aspirin,1,lactose;gluten,1;2,Lisinopril;Warfarin,2;23,12,2024-12-31,0
 Lisinopril,2,soy;wheat,3;4,Aspirin;Warfarin,1;23,90,2024-10-15,0
 Amoxicillin,3,penicillin;sulfa,5;6,Lisinopril;Oxycodone,2;5,200,2024-08-20,0
