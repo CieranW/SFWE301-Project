@@ -47,12 +47,6 @@ public class Test {
 
                 prescriptions.add(newPrescription);
             }
-
-            // Print all prescriptions
-            /*for (Prescription prescription : prescriptions) {
-                System.out.println(prescription);
-            }*/
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -86,27 +80,21 @@ public class Test {
                               .collect(Collectors.toList())
                 ));
             }
-
-            // Print all patients
-            // for (Patient patient : patients) {
-            //     System.out.println(patient);
-            // }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         // Test 1 - Manually Enter Prescription Details 
-        // String newPrescriptionAdded = PrescriptionTest.testEnterPrescription(prescriptions, prescriptionId, patients);
-        // System.out.println(newPrescriptionAdded);
+        String newPrescriptionAdded = PrescriptionTest.testEnterPrescription(prescriptions, prescriptionId, patients);
+        System.out.println(newPrescriptionAdded);
 
         // Test 2 - Accept and Validate Electronic Prescriptions
-        // boolean readCSV = PrescriptionTest.acceptEPrescription();
-        // if (readCSV) {
-        //     System.out.println("Prescriptions processed successfully.");
-        // } else {
-        //     System.out.println("There was an error processing the prescriptions. Please resend the CSV.");
-        // }
+        boolean readCSV = PrescriptionTest.acceptEPrescription();
+        if (readCSV) {
+            System.out.println("Prescriptions processed successfully.");
+        } else {
+            System.out.println("There was an error processing the prescriptions. Please resend the CSV.");
+        }
 
         // Test 3 - Conflicting Information
         // Pass patient, prescription and medication lists to the method to check for conflicts 
@@ -114,11 +102,11 @@ public class Test {
         
         // Test 4 - Updating Status of Prescriptions
         // Pass the list of prescriptions to the method to update the status
-        // PrescriptionTest.updatePrescriptionStatus(prescriptions);
+        PrescriptionTest.updatePrescriptionStatus(prescriptions);
 
         // Test 5 - Record all patient prescriptions
         // Pass the list of patients and prescriptions to the method to record all patient prescriptions
-        // PrescriptionTest.recordAllPatientPrescriptions(prescriptions);
+        PrescriptionTest.recordAllPatientPrescriptions(prescriptions);
 
         // Test 6 - Add notes to prescriptions
         // Pass the list of prescriptions to the method to add notes to prescriptions
@@ -129,7 +117,7 @@ public class Test {
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(outputPrescriptionCsvFile))) {
             // Write the header row
-            bw.write("Patient Name,Patient ID,Medication Name,Medication ID,Dosage,Number of Days,Daily Intake,Status,Notes,Prescription ID");
+            bw.write("Prescription ID,Patient Name,Patient ID,Medication Name,Medication ID,Dosage,Number of Days,Daily Intake,Status,Notes");
             bw.newLine();
 
             // Write each prescription to the file
