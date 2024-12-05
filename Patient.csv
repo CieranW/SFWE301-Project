@@ -1,0 +1,31 @@
+Patient Name,Patient ID,Allergies,Allergy ID,Current Medication,Medication ID
+Megan Barrett,10001,lactose,1,Amlodipine;Metoprolol;Sertraline,12;10;6
+Beth Reyes,10002,gluten,2,Amlodipine,12
+Debra Zamora,10003,penicillin;wheat,5;4,Aspirin;Lisinopril,1;2
+Rachel Brown,10004,soy;lactose,3;1,Sertraline;Metformin,6;4
+Rachel Robinson,10005,gluten;penicillin;corn,2;5;8,Metoprolol,10
+Arthur Chang,10006,lactose,1,Methylphenidate;Metoprolol;Escitalopram,13;10;18
+Grant Mathis,10007,soy,3,Tramadol;Hydrochlorothiazide,20;8
+Tonya Miller,10008,wheat;lactose;corn,4;1;8,Sertraline;Pantoprazole,6;19
+Vanessa Castillo,10009,starch,9,Fluoxetine;Hydrochlorothiazide,14;8
+Taylor Santos,10010,penicillin;lactose,5;1,Metoprolol;Gabapentin,10;9
+Richard Kramer,10011,starch,9,Oxycodone,5
+Stephen Parsons,10012,corn,8,Omeprazole;Metoprolol;Amoxicillin,15;10;3
+Leah Stokes,10013,penicillin;gluten,5;2,Prednisone;Pantoprazole,11;19
+Jessica Atkins,10014,starch;corn,9;8,Tramadol;Levothyroxine;Alprazolam,20;16;7
+Miss Holly Young,10015,wheat;sulfa,4;6,Pantoprazole,19
+Nicole Hughes,10016,wheat;lactose;starch,4;1;9,Gabapentin,9
+Katie Griffith,10017,starch;lactose;penicillin,9;1;5,Levothyroxine;Oxycodone;Amlodipine,16;7
+Charles Phillips,10018,none,20,Methylphenidate;Prednisone;Gabapentin,13;11;9
+Alejandro Fisher,10019,gluten;wheat,2;4,none,0
+Charles Mitchell,10020,starch,9,Escitalopram;Fluoxetine;Metformin,18;14;4
+Jennifer Gallagher,10021,starch;sulfa;penicillin,9;6;5,Lisinopril,2
+Valerie Crawford,10022,wheat;starch,4;9,Tramadol,20
+Jeremy Cooley,10023,starch,9,Levothyroxine,16
+Chelsea Lyons,10024,corn;penicillin,8;5,Fluoxetine;Amlodipine;Gabapentin,14;12;9
+Mary Simon,10025,soy,3,Escitalopram,18
+Carla Ramirez,10026,sulfa;soy,6;3,Amoxicillin;Amlodipine,3;12
+Bailey Lopez,10027,sulfa,6,Sertraline,6
+Pamela Nguyen,10028,lactose;gluten;starch,1;2;9,none,0
+Sarah Pope,10029,gluten;lactose,2;1,Gabapentin,9
+Theresa Garza,10030,starch,9,Lisinopril;Amlodipine;Amoxicillin,2;12;3

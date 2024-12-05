@@ -1,4 +1,4 @@
-package Inventory;
+package InventoryControl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,18 +11,38 @@ public class Main {
     private static InventoryService inventoryService;
     private static Scanner scanner;
     private static final int LOW_STOCK_THRESHOLD = 120;
+    private static StockForecasting stockForecasting;
 
+    /**
+     * Main method that runs the pharmacy management system.
+     * Initial startup sequence:
+     * 1. Loads all necessary data
+     * 2. Displays current inventory
+     * 3. Shows notifications if needed
+     * 4. Enters the main program loop
+     */
     public static void main(String[] args) {
         inventoryService = new InventoryService();
         scanner = new Scanner(System.in);
-
+        stockForecasting = new StockForecasting();
         // Load inventory using InventoryApp
         InventoryApp.loadInventoryFromFile(inventoryService, "Inventory.txt");
+        // Load usage history for forecasting
+        stockForecasting.loadUsageHistory();
         
+        // Display initial inventory once at startup
+        System.out.println("\n=== INITIAL INVENTORY STATUS ===");
+        printInventory();
+        System.out.println("\nPress Enter to continue...");
+        scanner.nextLine();
         
-
         boolean running = true;
         while (running) {
+            // Clear some space after initial inventory
+            System.out.println("\n");
+            // Display notification panel before menu
+            displayNotificationPanel();
+            
             printMenu();
             String userInput = scanner.nextLine().toLowerCase().trim();
 
@@ -50,8 +70,9 @@ public class Main {
         System.out.println("8. 'print suppliers' - Display all suppliers and supplied medications");
         System.out.println("9. 'expiring soon' - Display medications expiring within 30 days");
         System.out.println("10. 'expired meds' - Display and manage expired medications");
-        System.out.println("11. 'view logs' - View system activity logs");    // New option
-        System.out.println("12. 'exit' - Exit the system");
+        System.out.println("11. 'view logs' - View system activity logs");    
+        System.out.println("12. 'stock forecast' - View Low Stock Forecast based on previous sales trends");
+        System.out.println("13. 'exit' - Exit the system");
         System.out.print("Enter command: ");
     }
 
@@ -92,8 +113,55 @@ public class Main {
             case "view logs":    // New case
                 viewInventoryLogs();
                 break;
+            case "stock forecast":
+            	viewLowStockForecast();
+            	break;
+            
             default:
                 System.out.println("Invalid command. Please try again.");
+        }
+    }
+    
+    /**
+     * Checks for expired and soon-to-expire medications and displays appropriate notifications.
+     * Displays warnings for:
+     * - Currently expired medications
+     * - Medications expiring within 30 days
+     * Only displays the notification panel if there are items to report.
+     */
+    private static void displayNotificationPanel() {
+        LocalDate currentDate = LocalDate.now();
+        boolean hasExpired = false;
+        boolean hasExpiringSoon = false;
+        int expiredCount = 0;
+        int expiringSoonCount = 0;
+
+        for (InventoryItem item : inventoryService.getAllItems()) {
+            LocalDate expiryDate = LocalDate.parse(item.getExpDate());
+            
+            if (expiryDate.isBefore(currentDate)) {
+                hasExpired = true;
+                expiredCount++;
+            } else if (expiryDate.isBefore(currentDate.plusDays(30))) {
+            	
+                hasExpiringSoon = true;
+                expiringSoonCount++;
+            }
+        }
+
+        // Only display the panel if there are notifications
+        if (hasExpired || hasExpiringSoon) {
+            System.out.println("\n╔════════════════ NOTIFICATION PANEL ════════════════════╗");
+            
+            if (hasExpired) {
+                System.out.printf("║ ⚠ WARNING: %d medication(s) have expired!           	 ║\n", expiredCount);
+            }
+            if (hasExpiringSoon) {
+                System.out.printf("║ ℹ ALERT: %d medication(s) will expire in 30 days   	 ║\n", expiringSoonCount);
+            }
+            
+            System.out.println("║ Use 'expired meds' or 'expiring soon' to view details  ║");
+            System.out.println("╚════════════════════════════════════════════════════════╝");
         }
     }
 
@@ -120,19 +188,23 @@ public class Main {
         System.out.println("\n=== Expired Medications ===");
         boolean foundExpired = false;
         LocalDate currentDate = LocalDate.now();
-
         List<InventoryItem> expiredItems = new ArrayList<>();
 
-        // Find all expired medications
+        // Display expired medications
+        System.out.println("\nCurrently Expired Medications:");
+        System.out.println(String.format("%-5s %-20s %-12s %-10s", "ID", "Name", "Expiry Date", "Stock"));
+        System.out.println("-".repeat(50));
+
         for (InventoryItem item : inventoryService.getAllItems()) {
             LocalDate expiryDate = LocalDate.parse(item.getExpDate());
             if (expiryDate.isBefore(currentDate)) {
                 expiredItems.add(item);
                 foundExpired = true;
-                System.out.println("Expired: " + item.getName() +
-                                   " (ID: " + item.getId() +
-                                   ") - Expiry Date: " + expiryDate +
-                                   ", Stock: " + item.getQuantity());
+                System.out.println(String.format("%-5d %-20s %-12s %-10d",
+                    item.getId(),
+                    item.getName(),
+                    item.getExpDate(),
+                    item.getQuantity()));
             }
         }
 
@@ -141,20 +213,37 @@ public class Main {
             return;
         }
 
-        // Ask user if they want to set all stock to 0
-        System.out.print("Do you want to set the stock for all expired medications to 0? (yes/no): ");
+        System.out.print("\nDo you want to set the stock for all expired medications to 0? (yes/no): ");
         String response = scanner.nextLine().toLowerCase().trim();
 
         if (response.equals("yes")) {
             for (InventoryItem item : expiredItems) {
-                item.updateQuantity(-item.getQuantity()); // Set stock to 0
+                String oldExpiry = item.getExpDate();
+                int oldQuantity = item.getQuantity();
+
+                // Set stock to 0
+                item.updateQuantity(-item.getQuantity());
+
+                // Log the stock update
+                LogManager.logChange(item, "STOCK_UPDATE",
+                    "Quantity: " + oldQuantity,
+                    "Quantity: 0",
+                    "SYSTEM");
+
+                // Log the expiry removal
+                LogManager.logChange(item, "EXPIRED_UPDATE",
+                    "Quantity: " + oldQuantity + ", Expiry: " + oldExpiry,
+                    "Quantity: 0",
+                    "SYSTEM");
+
                 System.out.println("Stock set to 0 for: " + item.getName() + " (ID: " + item.getId() + ")");
             }
-            System.out.println("Stock for all expired medications has been updated to 0.");
+            System.out.println("All expired medications have been updated and logged.");
         } else {
             System.out.println("No changes made to expired medications.");
         }
     }
+
 
 
     private static void printSuppliers() {
@@ -187,25 +276,26 @@ public class Main {
         }
 
         // Print header
-        System.out.println(String.format("%-5s %-20s %-10s %-10s %-10s %-12s %-8s %-20s %-20s %-15s",
-            "ID", "Name", "Quantity", "Price($)", "Sold", "Expiry Date", "Cont. Subs.", "   Supplier", "   Allergens", "Total Value($)"));
+        System.out.println(String.format("%-5s %-20s %-10s %-10s %-10s %-12s %-15s %-20s %-20s %-15s",
+            "ID", "Name", "Quantity", "Price($)", "Sold", "Expiry Date", "Cont. Subs.", "Supplier", "Allergens", "Total Value($)"));
         System.out.println("------------------------------------------------------------------------------------------------------------------------------");
 
         // Print each item
         for (InventoryItem item : items) {
-            System.out.println(String.format("%-5d %-20s %-10d %-10.2f %-10d %-12s %-8b 	%-20s %-20s %-15.2f",
+            System.out.println(String.format("%-5d %-20s %-10d %-10.2f %-10d %-12s %-15b %-20s %-20s %-15.2f",
                 item.getId(),
-                truncateString(item.getName(), 20),
-                item.getQuantity(),
-                item.getPrice(),
-                item.getAmountSold(),
-                item.getExpDate(),
-                item.isConSubstancePackage(),
-                truncateString(item.getSupplier(), 20),
-                truncateString(item.getAllergen().toString(), 20),
-                item.calculateTotalValue()
+                item.getName(),
+                item.getQuantity(),                 // Integer, uses %d
+                item.getPrice(),                    // Double, uses %.2f
+                item.getAmountSold(),               // Integer, uses %d
+                item.getExpDate(),                  // String, uses %s
+                item.isConSubstancePackage(),       // Boolean, uses %b
+                item.getSupplier(),                 // String, uses %s
+                String.join(", ", item.getAllergen()), // List<String> to comma-separated string
+                item.calculateTotalValue()          // Double, uses %.2f
             ));
         }
+
         // Print summary
         System.out.println("\nInventory Summary:");
         System.out.println("Total number of items: " + items.size());
@@ -213,13 +303,6 @@ public class Main {
             String.format("%.2f", items.stream().mapToDouble(InventoryItem::calculateTotalValue).sum()));
     }
 
-    // Helper method to truncate long strings
-    private static String truncateString(String str, int length) {
-        if (str.length() <= length) {
-            return str;
-        }
-        return str.substring(0, length - 3) + "...";
-    }
     private static void updateSupplier() {
         System.out.println("\n=== Update Supplier ===");
         System.out.print("Enter item ID: ");
@@ -229,13 +312,24 @@ public class Main {
 
         for (InventoryItem item : inventoryService.getAllItems()) {
             if (item.getId() == id) {
+                String oldSupplier = item.getSupplier();
+
+                // Update supplier
                 item.setSupplier(newSupplier);
+
+                // Log supplier change
+                LogManager.logChange(item, "SUPPLIER_UPDATE",
+                    "Supplier: " + oldSupplier,
+                    "Supplier: " + newSupplier,
+                    "SYSTEM");
+
                 System.out.println("Supplier updated successfully!");
                 return;
             }
         }
         System.out.println("Item not found!");
     }
+
 
     private static void updateInventory() {
         System.out.println("\n=== Inventory Management ===");
@@ -345,44 +439,113 @@ public class Main {
         System.out.println("Item not found!");
     }
 
+    /**
+     * Manages expired medications in the inventory system.
+     * This method provides functionality to:
+     * 1. Display all currently expired medications
+     * 2. Allow updating expiry dates for specific medications
+     * 3. Remove all expired medications from inventory
+     * 
+     * The method performs the following steps:
+     * - Checks current inventory against current date
+     * - Displays expired items in a formatted table
+     * - Provides options to either update individual items or remove all expired items
+     * - Maintains log entries for all changes made
+     * 
+     * Dependencies:
+     * - Requires access to inventoryService for item management
+     * - Uses LogManager for activity logging
+     * - Uses scanner for user input
+     */
     private static void updateExpiredMeds() {
         System.out.println("\n=== Update Expired Medications ===");
-        System.out.print("Enter item ID: ");
-        int id = Integer.parseInt(scanner.nextLine());
-        
+        boolean foundExpired = false;
+        LocalDate currentDate = LocalDate.now();
+        List<InventoryItem> expiredItems = new ArrayList<>();
+
+        // Display all expired medications
+        System.out.println("\nCurrently Expired Medications:");
+        System.out.println(String.format("%-5s %-20s %-12s", "ID", "Name", "Expiry Date"));
+        System.out.println("-".repeat(40));
+
         for (InventoryItem item : inventoryService.getAllItems()) {
-            if (item.getId() == id) {
-                String oldDate = item.getExpDate();
-                System.out.print("Enter new expiry date (YYYY-MM-DD) or 'remove' to remove expired stock: ");
-                String input = scanner.nextLine();
-                
-                if (input.equalsIgnoreCase("remove")) {
-                    int oldQuantity = item.getQuantity();
-                    item.setQuantity(0);
-                    
-                    // Log the removal
-                    LogManager.logChange(item, "EXPIRY_REMOVAL",
-                        "Quantity: " + oldQuantity + ", Expiry: " + oldDate,
-                        "REMOVED",
-                        "SYSTEM");
-                    
-                    System.out.println("Expired medication removed from inventory.");
-                } else {
-                    item.setExpDate(input);
-                    
-                    // Log the expiry date update
-                    LogManager.logChange(item, "EXPIRY_UPDATE",
-                        oldDate,
-                        input,
-                        "SYSTEM");
-                    
-                    System.out.println("Expiry date updated successfully!");
-                }
-                return;
+            LocalDate expiryDate = LocalDate.parse(item.getExpDate());
+            if (expiryDate.isBefore(currentDate)) {
+                foundExpired = true;
+                expiredItems.add(item);
+                System.out.println(String.format("%-5d %-20s %-12s",
+                    item.getId(),
+                    item.getName(),
+                    item.getExpDate()));
             }
         }
-        System.out.println("Item not found!");
+
+        if (!foundExpired) {
+            System.out.println("No expired medications found.");
+            return;
+        }
+
+        // Display options
+        System.out.println("\nOptions:");
+        System.out.println("1. Update specific medicine");
+        System.out.println("2. Remove all expired medications");
+        System.out.print("\nEnter your choice (1 or 2): ");
+
+        String choice = scanner.nextLine();
+
+        switch (choice) {
+            case "1":
+                System.out.print("Enter item ID: ");
+                int id = Integer.parseInt(scanner.nextLine());
+                for (InventoryItem item : expiredItems) {
+                    if (item.getId() == id) {
+                        String oldExpiry = item.getExpDate();
+                        System.out.print("Enter new expiry date (YYYY-MM-DD): ");
+                        String newExpiry = scanner.nextLine();
+                        item.setExpDate(newExpiry);
+
+                        // Log the expiry update
+                        LogManager.logChange(item, "EXPIRED_UPDATE",
+                            "Expiry: " + oldExpiry,
+                            "Expiry: " + newExpiry,
+                            "SYSTEM");
+
+                        System.out.println("Expiry date updated successfully for: " + item.getName() + " (ID: " + item.getId() + ")");
+                        return;
+                    }
+                }
+                System.out.println("Item ID not found in expired medications!");
+                break;
+
+            case "2":
+                for (InventoryItem item : expiredItems) {
+                    String oldExpiry = item.getExpDate();
+                    int oldQuantity = item.getQuantity();
+
+                    // Update stock to 0 (remove expired)
+                    item.updateQuantity(-item.getQuantity());
+
+                    // Log the stock update
+                    LogManager.logChange(item, "STOCK_UPDATE",
+                        "Quantity: " + oldQuantity,
+                        "Quantity: 0",
+                        "SYSTEM");
+
+                    // Log the expiry removal
+                    LogManager.logChange(item, "EXPIRED_UPDATE",
+                        "Quantity: " + oldQuantity + ", Expiry: " + oldExpiry,
+                        "Quantity: 0",
+                        "SYSTEM");
+                }
+                System.out.println("Expired medications removed from inventory and logged.");
+                break;
+
+            default:
+                System.out.println("Invalid choice!");
+        }
     }
+
+
 
     private static void checkLowStock() {
         System.out.println("\n=== Low Stock Items ===");
@@ -401,50 +564,67 @@ public class Main {
             System.out.println("No items are currently low in stock.");
         }
     }
-
     private static void processReorder() {
         System.out.println("\n=== Process Reorders ===");
-        List<InventoryItem> lowStockItems = new ArrayList<>();
+        List<InventoryItem> expiredItems = new ArrayList<>();
 
+        // Collect expired items
         for (InventoryItem item : inventoryService.getAllItems()) {
-            if (item.getQuantity() < LOW_STOCK_THRESHOLD) {
-                lowStockItems.add(item);
-                System.out.println("Item: " + item.getName() + 
+            LocalDate expiryDate = LocalDate.parse(item.getExpDate());
+            if (expiryDate.isBefore(LocalDate.now())) {
+                expiredItems.add(item);
+                System.out.println("Expired Item: " + item.getName() + 
                                  " (ID: " + item.getId() + 
-                                 ") - Current quantity: " + item.getQuantity());
+                                 ") - Current quantity: " + item.getQuantity() + 
+                                 ", Expiry Date: " + expiryDate);
             }
         }
 
-        if (lowStockItems.isEmpty()) {
-            System.out.println("No items need reordering.");
+        if (expiredItems.isEmpty()) {
+            System.out.println("No expired items to reorder.");
             return;
         }
 
-        System.out.print("Would you like to place orders for these items? (yes/no): ");
+        // Prompt for confirmation
+        System.out.print("Would you like to reorder expired items? (yes/no): ");
         String response = scanner.nextLine().toLowerCase();
 
         if (response.equals("yes")) {
-            for (InventoryItem item : lowStockItems) {
-                int orderQuantity = LOW_STOCK_THRESHOLD - item.getQuantity();
+            for (InventoryItem item : expiredItems) {
+                int reorderQuantity = LOW_STOCK_THRESHOLD - item.getQuantity();
+                String oldExpiry = item.getExpDate();
                 int oldQuantity = item.getQuantity();
-                
-                // Update quantity
-                item.updateQuantity(orderQuantity);
-                
-                // Log the reorder
-                LogManager.logChange(item, "REORDER", 
-                    String.valueOf(oldQuantity),
-                    String.valueOf(item.getQuantity()),
-                    "SYSTEM");
-                
-                System.out.println("Ordered " + orderQuantity + " units of " + item.getName() + 
-                                 " from supplier: " + item.getSupplier());
+
+                // Reorder and update expiration date
+                inventoryService.reorderExpiredItem(item, reorderQuantity);
+
+                // Log reorder action under "REORDER"
+                LogManager.logChange(
+                    item, 
+                    "REORDER", 
+                    "Quantity: " + oldQuantity + ", Expiry: " + oldExpiry, 
+                    "Quantity: " + item.getQuantity() + ", Expiry: " + item.getExpDate(), 
+                    "SYSTEM"
+                );
+
+                // Log stock update under "STOCK_UPDATE"
+                LogManager.logChange(
+                    item,
+                    "STOCK_UPDATE",
+                    "Quantity: " + oldQuantity,
+                    "Quantity: " + item.getQuantity(),
+                    "SYSTEM"
+                );
+
+                System.out.println("Reordered " + reorderQuantity + " units of " + item.getName() +
+                                   " with new Expiry Date: " + item.getExpDate());
             }
-            System.out.println("Orders processed successfully!");
+            System.out.println("Reorders processed successfully!");
         } else {
             System.out.println("Reorder cancelled.");
         }
     }
+
     private static void viewInventoryLogs() {
         System.out.println("\n=== View Inventory Logs ===");
         System.out.println("1. View all logs");
@@ -470,6 +650,24 @@ public class Main {
                 break;
             case "5":
                 LogManager.viewLogsByType("EXPIRY_REMOVAL");
+                break;
+            default:
+                System.out.println("Invalid choice!");
+        }
+    }
+    private static void viewLowStockForecast() {
+        System.out.println("\n=== Low Stock Analysis ===");
+        System.out.println("1. View current low stock items");
+        System.out.println("2. View stock forecast report");
+        System.out.print("Enter choice (1 or 2): ");
+        
+        String choice = scanner.nextLine();
+        switch (choice) {
+            case "1":
+                checkLowStock();
+                break;
+            case "2":
+                stockForecasting.displayForecastForAllItems(inventoryService);
                 break;
             default:
                 System.out.println("Invalid choice!");

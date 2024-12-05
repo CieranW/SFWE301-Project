@@ -1,19 +1,26 @@
 package PrescriptionProcessing;
 
 public class Prescription {
+
     private int prescriptionId;
+    private String medicationName;
     private int medicationId;
+    private String patientName;
     private int patientId;
-    private String dosage;
+    private int dosage;
+    private int numDays;
+    private int dailyIntake;
     private String status;
     private String notes;
 
-
-    public Prescription(int prescriptionId, int medicationId, int patientId, String dosage, String status, String notes) {
-        this.prescriptionId = prescriptionId;
+    public Prescription(String patientName, int patientId, String medicationName, int medicationId, int dosage, int numDays, int dailyIntake, String status, String notes) {
+        this.medicationName = medicationName;
         this.medicationId = medicationId;
+        this.patientName = patientName;
         this.patientId = patientId;
         this.dosage = dosage;
+        this.numDays = numDays;
+        this.dailyIntake = dailyIntake;
         this.status = status;
         this.notes = notes;
     }
@@ -23,7 +30,15 @@ public class Prescription {
     }
 
     public void setPrescriptionId(int prescriptionId) {
-        this.prescriptionId = prescriptionId;
+        this.prescriptionId = updatePrescriptionID(prescriptionId);
+    }
+
+    public String getMedicationName() {
+        return medicationName;
+    }
+
+    public void setMedicationName(String medicationName) {
+        this.medicationName = medicationName;
     }
 
     public int getMedicationId() {
@@ -34,6 +49,14 @@ public class Prescription {
         this.medicationId = medicationId;
     }
 
+    public String getPatientName() {
+        return patientName;
+    }
+
+    public void setPatientName(String patientName) {
+        this.patientName = patientName;
+    }
+
     public int getPatientId() {
         return patientId;
     }
@@ -42,12 +65,28 @@ public class Prescription {
         this.patientId = patientId;
     }
 
-    public String getDosage() {
+    public int getDosage() {
         return dosage;
     }
 
-    public void setDosage(String dosage) {
+    public void setDosage(int dosage) {
         this.dosage = dosage;
+    }
+
+    public int getNumDays() {
+        return numDays;
+    }
+
+    public void setNumDays(int numDays) {
+        this.numDays = numDays;
+    }
+
+    public int getDailyIntake() {
+        return dailyIntake;
+    }
+
+    public void setDailyIntake(int dailyIntake) {
+        this.dailyIntake = dailyIntake;
     }
 
     public String getStatus() {
@@ -66,6 +105,28 @@ public class Prescription {
         this.notes = notes;
     }
 
+    @Override
+    public String toString() {
+        return "Prescription{" +
+               "prescriptionId=" + prescriptionId +
+               ", patientName='" + patientName + '\'' +
+               ", patientId=" + patientId +
+               ", medicationName='" + medicationName + '\'' +
+               ", medicationId=" + medicationId +
+               ", dosage='" + dosage + '\'' +
+               ", daysToTake=" + numDays +
+               ", notes='" + notes + '\'' +
+               ", status='" + status + '\'' +
+               '}';
+    }
 
+    public int updatePrescriptionID(int prescriptionID) {
+        prescriptionID += 1;
+        return prescriptionID;
+    }
+
+    public int calculateDosage(int numDays, int dailyIntake) {
+        return numDays * dailyIntake;
+    }
 
 }
